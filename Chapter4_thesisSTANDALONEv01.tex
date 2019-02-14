@@ -13,6 +13,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{longtable}
+\usepackage{multirow}
 \usepackage{afterpage}
 \usepackage{array,booktabs,enumitem}% http://ctan.org/pkg/
 \newcolumntype{P}[1]{>{\endgraf\vspace*{-\baselineskip}}p{#1}}
@@ -229,19 +230,46 @@ mm = \frac{PAC}{K_m + PAC}
 \subsection{Process model: Ordinary differential equations}
 
 Ode's:
+%\begin{equation}
+\begin{align}
+\text{Rate} & & \text{flux into cells}            &            &\text{gas transfer}   &     & \text{dilution} \nonumber                              \\
+\frac{\partial DIC}{\partial t}&=&                      - (P - R)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(CO_{2}^{M} - CO_{2})       \nonumber \\
+                                           &  &                                   &      &+\hat Q^{co2}kLa_{ CO_2}^{co2}(CO_{2}^{co2} - CO_{2})    \\
+\frac{\partial O_2}{\partial t}&=& \frac{1}{R_Q}  (P - R)&      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} -   \phantom{C}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{C}O_{2})     \nonumber   \\
+                                           &  &                                   &      &+\hat Q^{co2}kLa_{\phantom{C}O_2}^{co2}(\phantom{C}O_{2}^{co2} - \phantom{C}O_{2})    \\
+\frac{\partial alk}{\partial t} & =&      R_R (P \phantom{ + R})& 
+\end{align}
+%\end{equation}
 
-\begin{equation}
-\frac{\partial DIC}{\partial t}= - P_1 I mm + R_1 + 0.893 kLA_{O2} \xi (CO_{2H} - CO_{2})
-\end{equation}
 
+\begin{table}[ht]
+\caption{Multi-row table}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+	& Symbol & Description  & Prior / Value \\
+    \hline
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{State variable}}
+    &DIC$^0$&Y\\
+    & O$_2^0$ & \\
+    &TA$^0$ &Y\\
+    \\
+    \\
+    \hline
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{Gas transfer terms}}
+    &$ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1 \\
+    
+    &CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$M  \\
+    & $x_{O_2}^{air} $ & mole fraction of O$_2$ atmosphere& 0.2094 \\ 
+    & $x_{CO_2}^{air} $ & mole fraction of CO$_2$ atmosphere& 400ppm \\ 
+    & $CO_{2}^{air}$ & sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$\\
+    &TA$^0$ &Y\\
+    \\
+    \\
+\end{tabular}
+\end{center}
+\label{tab:multicol}
+\end{table}
 
-\begin{equation}
-\frac{\partial O_2}{\partial t}= \frac{P_1 I mm - R_1}{R_Q} +  kLA_{O2} \xi (O_{2H} - O_{2})
-\end{equation}
-
-\begin{equation}
-\frac{\partial alk}{\partial t}=  P_1 I mm R_R
-\end{equation}
 
 
 \begin{tabular}{l l  | l}
@@ -252,13 +280,14 @@ Ode's:
 %	B & Microalgae population & concentration of cells**[BM]  \\
 	pH & -  & log$_{10}$(-mol/L H+)  \\
 	CO$_2$ & Carbon dioxide  & $\mu$mol/L \\
-	HCO$_c^-$ & Bicarbonate & $\mu$mol/L  \\
-	CO$_{3-2}$ & Carbonate  & $\mu$mol/L \\
+	HCO$_3^-$ & Bicarbonate & $\mu$mol/L  \\
+	CO$_3^{2-}$ & Carbonate  & $\mu$mol/L \\
 	PAC & Photosynthetically active carbon & $\mu$mols/L  \\
 	mm & - & - \\
 	kLA$_{O2}$  & Mass transfer coefficient for O$_2$ &  d$^{-1}$  \\
-	O$_{2H}$  & Equilibrium O$_2$ concentration  & $\mu$mols/L  \\
+	
 	CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$mols/L  \\
+	
 	K0$_{O2}$ &  Solubility of gas & mol/kg$_{soln}$/atm  \\
 	K0$_{CO2}$ & Solubility of gas & mol/kg$_{soln}$/atm   \\
 	alk  & Alkalinity & $\mu$mols/L  \\
@@ -269,9 +298,9 @@ Ode's:
 	K$_m$ & Carbon restriction & $\mu$mols/L \\
 	
 	P & Photosynthesis rate & $\mu$mols/L/day \\
-	R$_1$ & Respiration rate & $\mu$mols/L/day \\
-	R$_R$ & Redfield ratio & - \\	
-	R$_Q$ & Respiratory quotient & - \\
+	R & Respiration rate & $\mu$mols/L/day \\
+	RR & Redfield ratio  d& - \\	
+	RQ & Respiratory quotient & - \\
 %	B$^{max}$ & maximum microalgae population  & cells \\
 %	$\mu_B^{max}$ & maximum microalgae growth rate  & (cell hour)$^{-1}$ \\
 \end{tabular}
