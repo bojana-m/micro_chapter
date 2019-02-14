@@ -425,11 +425,11 @@ model micro_iterative {
 const FO2  = 0.2094
 const FCO2 = 397e-6
 const S    = 34
-const RR   = 16/106*0.2
 
 param kLAO2
 param Km
-
+param RR
+param RQ
 
 input I			// light intensity
 input T			//temperature (C)
@@ -438,10 +438,6 @@ input gas		//gas on/off
 state DIC // state variables
 state O_2
 state pH
-state light
-state mich_ment
-state HC
-state CO
 state O2H_pr
 state CO2H_pr
 state R
@@ -468,39 +464,45 @@ obs DIC_obs
 obs alk_obs
 
 sub parameter {/* prior distribution over parameters */
-Km 	~ log_normal(log(100.0), 0.2)
+Km 	~ log_normal(log(200.0), 0.8)
 kLAO2 	~ log_normal(log(200.0), 0.5)
+RR 	~ uniform(0.0001, 0.2)
+RQ	~ uniform(0.66, 1.0)
 
 sigma_r_R 	~ normal(0.01, 0.001)
-sigma_r_P 	~ normal(0.05, 0.005)
+sigma_r_P 	~ normal(0.05, 0.01)
 }
+
 
 const prop_std = 0.1;
 sub proposal_parameter {
-Km 	~ log_normal(log(Km), 0.2*prop_std)
+Km 	~ log_normal(log(Km), 0.8*prop_std)
 kLAO2 	~ log_normal(log(kLAO2), 0.5*prop_std)
+RR 	~ truncated_normal(RR, 0.2*prop_std, lower = 0.0001, upper = 0.2)
+RQ 	~ truncated_normal(RQ, 0.2*prop_std, lower = 0.66, upper = 1.0)
 
 sigma_r_R 	~ normal(sigma_r_R, 0.001*prop_std)
-sigma_r_P 	~ normal(sigma_r_P, 0.005*prop_std)
+sigma_r_P 	~ normal(sigma_r_P, 0.01*prop_std)
 }
 
 sub initial {/* prior distribution over initial conditions, given parameters */
 // specify the initial condition model 
-R 	~ normal(log(1000.0), 0.3)
-R1 	~ log_normal(log(1000.0), 0.3)
-P 	~ normal(log(30000.0), 0.8)
-P1 	~ log_normal(log(30000.0), 0.8)
-alk 	~ log_normal(log(1700.0), 0.05)
+R 	~ normal(log(500.0), 0.6)
+R1 	~ log_normal(log(500.0), 0.6)
+P 	~ normal(log(5000.0), 0.8)
+P1 	~ log_normal(log(5000.0), 0.8)
+alk 	~ log_normal(log(1700.0), 0.1)
 
-DIC 	~ log_normal(log(1500.0), 0.1) 
+DIC 	~ log_normal(log(1200.0), 0.2) 
 O_2 	~ log_normal(log(230.0), 0.2)   
 pH 	~ log_normal(log(8.5), 0.2)
-CO2 	~ log_normal(log(5.0), 0.1)
-HCO3 	~ log_normal(log(1300.0), 0.1)
-CO3 	~ log_normal(log(200.0), 0.1)
-O_2H 	~ log_normal(log(200.0), 0.1)	
-CO2H 	~ log_normal(log(10.0), 0.1)
+CO2 	~ log_normal(log(3.0), 0.4)
+HCO3 	~ log_normal(log(1000.0), 0.3)
+CO3 	~ log_normal(log(300.0), 0.4)
+O_2H 	~ log_normal(log(200.0), 0.2)	
+CO2H 	~ log_normal(log(10.0), 0.2)
 }
+
 
 
 sub transition(delta = 0.0023) { // obs are in days ie delta=1.0 for daily solving. delta=0.00069 for solving every minute, delta=0.000011574 for solving every second
@@ -508,11 +510,6 @@ sub transition(delta = 0.0023) { // obs are in days ie delta=1.0 for daily solvi
 
 
 /* processes */
-
-// updated CO2SYS equations with alk from 1500
-//	HCO3 <- exp(16.262 + 0.0047081*DIC - 0.11922*T + 0.0050303*alk1 + 1.7093*log(DIC) + 0.38048*log(S) - 3.7548*log(alk1) - 2.292e-05*DIC*T - 0.0032028*DIC*log(DIC) - 0.00015313*DIC*log(S) + 0.0032527*DIC*log(alk1) + 0.021965*T*log(alk1) - 0.00090344*alk1*log(DIC)) 
-//	CO2 <- exp(-486.84 - 0.070754*DIC - 0.25277*T - 0.20674*S - 0.11627*alk1 + 78.274*log(DIC) + 72.147*log(alk1) - 2.9438e-05*DIC*T - 5.8841e-06*DIC*alk1 - 0.0040234*DIC*log(DIC) + 0.016172*DIC*log(alk1) - 0.02039*T*log(DIC) + 0.062452*T*log(alk1) + 0.029857*S*log(alk1) + 0.0031507*alk1*log(DIC) + 0.010398*alk1*log(alk1) - 11.192*log(DIC)*log(alk1))
-//	pH <- 9.5803 - 0.0027089*DIC - 0.018089*T - 0.012068*S + 0.0016329*alk1 + 1.2706e-05*DIC*T + 4.6961e-07*DIC*alk1 - 9.2122e-06*T*alk1 - 5.9777e-08*DIC**2 - 2.194e-07*alk1**2 
 
 inline TK     = T + 273.0		// temp in kelvin
 inline K0_CO2 = exp(-60.2409 + 93.4517*(100.0/TK) + 23.3585*log(TK/100.0)+ S*(0.023517 - 0.023656*(TK/100) + 0.0047036*(TK/100.0)*(TK/100.0)))
@@ -606,27 +603,20 @@ P 	<- P + r_P
 P1 	<- exp(P)
 
 ode(h = 0.1, atoler = 1.0e-6, rtoler = 1.0e-6, alg = 'RK4(3)'){
-dDIC/dt  = -P1*I*mm + R1 + gas*0.893*kLAO2*(CO2H - CO2)  		// y(3) = DIC = Dissolved Inorganic Carbon 
-dO_2/dt	 =  P1*I*mm - R1 + gas*kLAO2*(O_2H - O_2)	 		// y(4) = O_2 = Dissolved Oxygen 
-dalk/dt =  +2*RR*P1*I*mm
+dDIC/dt  =  -P1*I*mm + R1 	+ gas*0.893*kLAO2*(CO2H - CO2)  		// DIC = Dissolved Inorganic Carbon 
+dO_2/dt	 =  (P1*I*mm - R1)/RQ 	+ gas*kLAO2*(O_2H - O_2)	 		// O_2 = Dissolved Oxygen 
+dalk/dt  =   RR*P1*I*mm
 }
 
-
-light 	  <- I
-mich_ment <- mm
-HC	  <- HCO3
-CO	  <- CO2
-O2H_pr 	  <- O_2H
-CO2H_pr   <- CO2H
 }
 
 
 sub observation {
 
-O2_obs  ~ log_normal(log(O_2), 0.1)
-pH_obs  ~ log_normal(log(pH), 0.2)
-DIC_obs ~ log_normal(log(DIC), 0.2) 
-alk_obs ~ log_normal(log(alk), 0.2)
+O2_obs  ~ log_normal(log(O_2), 0.3)
+pH_obs  ~ log_normal(log(pH), 0.3)
+DIC_obs ~ log_normal(log(DIC), 0.3) 
+alk_obs ~ log_normal(log(alk), 0.3)
 }
 }
 \end{verbatim}
