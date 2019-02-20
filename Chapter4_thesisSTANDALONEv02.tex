@@ -233,11 +233,11 @@ Ode's:
 %\begin{equation}
 \begin{align}
 \text{Rate} & & \text{flux into cells}            &            &\text{gas transfer}   &     & \text{dilution} \nonumber                              \\
-\frac{\partial DIC}{\partial t}&=&                      - (P - R)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(CO_{2}^{M} - CO_{2})       \nonumber \\
+\frac{\partial DIC}{\partial t}&=&                      - (P - R)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(DIC^{M} - DIC)       \nonumber \\
                                            &  &                                   &      &+\hat Q^{co2}kLa_{ CO_2}^{co2}(CO_{2}^{co2} - CO_{2})    \\
-\frac{\partial O_2}{\partial t}&=& \frac{1}{R_Q}  (P - R)&      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} -   \phantom{C}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{C}O_{2})     \nonumber   \\
+\frac{\partial O_2}{\partial t}&=& \frac{1}{R_Q}  (P - R)&      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} -   \phantom{CC}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2})     \nonumber   \\
                                            &  &                                   &      &+\hat Q^{co2}kLa_{\phantom{C}O_2}^{co2}(\phantom{C}O_{2}^{co2} - \phantom{C}O_{2})    \\
-\frac{\partial TA}{\partial t} & =&      R_R (P \phantom{ + R})& 
+\frac{\partial TA}{\partial t} & =&      R_R (P \phantom{ + R})& & & & +\frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA)
 \end{align}
 %\end{equation}
 
@@ -277,10 +277,11 @@ Ode's:
     \\
     \hline
         \multirow{4}{*}{\rotatebox[origin=c]{90}{Dilution terms }}
-    &$  Q ^{M} $ & rate? on/off?  &  & - \\
-    &$  V $ & Volume of the reactor  &  & - \\
-    &$  CO_{2} ^{M} $ &   &  & - \\ 
-    & $\phantom{C}O_2^{M}$   
+    &$  Q ^{M} $ & rate  &  & ml/day \\
+    &$  V $ & Volume of the reactor  & 500 & ml \\
+    &$  DIC ^{M} $ & Media dissolved inorganic carbon  & 1724.20 & $\mu$M/L \\ 
+    &$	\phantom{CC}O_2^{M}$ & Media oxygen concentration & 226.65 & $\mu$M/L \\
+    &$	\phantom{C}TA^{M}$  & Media total alkalinity & 1797.90 & $\mu$M/L
     \\
     
         \hline
