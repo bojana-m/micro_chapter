@@ -24,6 +24,8 @@
 %\usepackage{mathrsfs}
 %\usepackage{enumerate}
 
+\usepackage{placeins}
+\usepackage{rotating}
 \usepackage{titlesec}
 \usepackage{geometry}
  \geometry{
@@ -90,7 +92,7 @@ Microalgae are tiny organisms..
 O$_2$, pH, DIC and alk observations collected over 4 days.
 
 
-gas, temperature, and light were used as forcings.
+Gas, temperature, light and dilution rate were used as forcings.
 
 
 
@@ -102,7 +104,7 @@ It uses two of the four measurable carbonate system parameters (total alkalinity
 
 To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly define 2 iterations of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process considering a function, its derivative and an initial starting value. Vital to the convergence of the Newton-Raphson method is a good starting value. To provide a good starting value, we randomly sample from a range of CO2SYS input parameters (temperature = 20-30, salinity = 30-40, DIC = 200-2500, and alkalinity = 1500-3000) and fit an approximating equation to pH as a function of DIC, S and T (alk?). This gives us a close initial starting value for the Newton-Raphson method. 
 
-Converges in 2-3 iterations [BM: how to show this? Maybe run with Chris's scripts and show plots]
+Converges in 2-3 iterations 
 
 
 %%
@@ -381,19 +383,49 @@ Decide whether the parameters vary in time or not.
 \newpage
 
 
+\FloatBarrier
 
 \section{Results}
 
 
-\subsection{CO2SYS approximating equations}
+\subsection{Carbon chemistry}
 
 
-\begin{equation}
-\begin{aligned}
-pH = 12.26 -0.0030605 DIC -0.043752 T -0.013625 S+ 0.00011315 alk\\
-+ 1.3463e-05 DIC T + 5.2215e-07 DIC alk
-\end{aligned}
-\end{equation}
+
+\begin{align*}
+pH_{init} 	&= 12.26 -0.0030605*DIC -0.043752*T -0.013625*S+ 0.00011315*TA \nonumber \\
+			&+ 1.3463e-5*DIC*T + 5.2215e-7*DIC*TA \nonumber \\
+h 			&=  10^{-pH_{init}}	\nonumber                              \\
+h_{free} 	&=  \frac{h}{Free_{2_T}}	 \nonumber \\
+f0 			&= (  DIC*1e-6*\frac{K1*h+2*K1*K2}{h*h+K1*h+K1*K2}    \nonumber\\
+			&  - h_{free} + \frac{KW}{h} - Alk*1e-6 +TB  /(1+h/KB) )*1e6 \nonumber  \\
+df0 		&= (  DIC*1e-6*\frac{K1 +2*K1*K2}{h^2+K1*h+K1*K2}  \nonumber\\
+			&  -DIC*1e-6*\frac{(K1*h+2*K1*K2)}{(h^2+K1*h+K1*K2)^2}*(2*h+K1)  \nonumber\\
+			&  -TB *1/(1+h/KB)^2 / KB             \nonumber             \\
+			&  -\frac{KW}{h^2} - \frac{1}{Free_{2_T}} )*1e6  * (-log(10)*10^{-pH}) \nonumber \\
+pH 			&= pH - \frac{f0}{df0} \nonumber                              \\
+H 			&= 10^{-pH} \nonumber                              \\
+denom 		&= H^2+K1*H+K1*K2 \nonumber                              \\
+CO2  		&= \frac{DIC*H^2}{denom} \nonumber                              \\
+HCO3 		&= \frac{DIC*H *K1}{denom} \nonumber                              \\
+CO3  		&= \frac{DIC*K1*K2}{denom}      \nonumber \\                         
+\end{align*}
+
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_states}}
+	\caption[.]{Field study}
+	\label{fig:iterative_states}
+\end{figure}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_carbon}}
+	\caption[.]{Field study}
+	\label{fig:iterative_carbon}
+\end{figure}
 
 
 
@@ -449,7 +481,8 @@ pH = 12.26 -0.0030605 DIC -0.043752 T -0.013625 S+ 0.00011315 alk\\
 %\end{aligned}
 %\end{equation}
 
-
+\FloatBarrier
+\subsection{Posteriors}
 
 
 
