@@ -451,14 +451,14 @@ CO3  		&= \frac{DIC*K1*K2}{denom}      \nonumber \\
 
 \begin{figure}
 	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_states}}
-	\caption[.]{Field study}
+	\caption[.]{Iterative vs exact solution for state variables $O_2$, $DIC$, and $TA$.}
 	\label{fig:iterative_states}
 \end{figure}
 
 
 \begin{figure}
 	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_carbon}}
-	\caption[.]{Field study}
+	\caption[.]{Iterative vs exact solution for carbon chemistry $CO_2$, $HCO_3$, $CO_3$, and $pH$.}
 	\label{fig:iterative_carbon}
 \end{figure}
 
@@ -537,25 +537,41 @@ $CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
 
 
 
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/O2_pH}}
+	\caption[.]{Posteriors for $O_2$ and $pH$.}
+	\label{fig:pos_O2_pH}
+\end{figure}
 
-%\section{Unscented Kalman Filter}
-%
-%
-%\subsection{Introduction to the Unscented Kalman Filter}
-%
-%history, how it emerged, when to use it, comparison with other techniques, fast and computationally cheap 
-%
-%\subsection{Unscented Kalman Filter Algorithm}
-%
-%\begin{enumerate}
-%\item Choose the sigma parameters $\alpha$, $\beta$ and $\kappa$
-%\item Define P the covariance estimate matrix, R the measurement noise matrix, and Q the process noise matrix
-%\item Find the weights, means and sigma points
-%\item Predict step
-%\item Update step
-%\end{enumerate}
-%
-%If you already have your whole dataset then you can employ batch processing instead.
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/DIC_TA}}
+	\caption[.]{Posteriors for $DIC$ and $TA$.}
+	\label{fig:pos_DIC_TA}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/carbon}}
+	\caption[.]{Posteriors for carbon chem.}
+	\label{fig:pos_carbon}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/P_and_R}}
+	\caption[.]{Posteriors for photosynthesis and respiration.}
+	\label{fig:pos_P_R}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/parameters_model}}
+	\caption[.]{Priors, posteriors and traces for model parameters.}
+	\label{fig:pos_parameters_model}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/parameters_obserror}}
+	\caption[.]{Priors, posteriors and traces for obs. error parameters.}
+	\label{fig:pos_parameters_obserror}
+\end{figure}
 
 
 
