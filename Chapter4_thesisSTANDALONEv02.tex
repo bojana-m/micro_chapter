@@ -276,7 +276,6 @@ Ode's:
     & $\tau$ & half-life of $kLa_{\phantom{C}O_2}^{air}$  & range(2-20) & min$^{-1}$\\
     & $kLa_{\phantom{C}O_2}^{air}$ & Mass transfer coefficient for O$_2$ & $\ln(2) * 24*60/\tau$ & day$^{-1}$\\
    
-    \\
     \hline
         \multirow{4}{*}{\rotatebox[origin=c]{90}{Dilution terms }}
     &$  Q ^{M} $ & rate  &  & ml/day \\
@@ -298,9 +297,7 @@ Ode's:
     & $x_{CO_2}^{CO2} $ & mole fraction of  & 1 & ppm \\ 
     & $CO_{2}^{CO2}$ & sat CO$_2$ conc with CO$_2$ &   $x_{CO_2}^{CO2} CO_{2H}$ & \\
     & $kLa_{ CO_2}^{CO2}$ & mass transfer coefficient & 0.893$kLa_{\phantom{C}O_2}^{CO2}$  & day$^{-1}$ \\
-    &$  CO_{2} ^{CO2} $ &   &  &  \\ 
-    
-    \\
+    &$  CO_{2} ^{CO2} $ &   &  &  \\   
     \hline
 \end{longtable}  
     
@@ -340,8 +337,6 @@ Ode's:
 	R & Respiration rate & $\mu$mols/L/day \\
 	R$_R$ & Redfield ratio & - \\	
 	R$_Q$ & Respiratory quotient & - \\
-%	B$^{max}$ & maximum microalgae population  & cells \\
-%	$\mu_B^{max}$ & maximum microalgae growth rate  & (cell hour)$^{-1}$ \\
 \end{tabular}
 \captionof{table}{Table of variables and parameters.}
 
@@ -395,8 +390,8 @@ Total Sulfur
  TS     	&= \frac{0.14}{96.062}*\frac{S}{1.8065} \nonumber \\
  IS     	&= 19.924*\frac{S}{(1000.0 - 1.005*S)} \nonumber \\
  KS_{int} 	&= -\frac{4276.1}{T_K} + 141.328 - 23.093*log(T_K) + (-\frac{13856.0}{T_K} + 324.57 \nonumber\\ 			 
- 			& - 47.986*log(T_K))*\sqrt{IS} + ( \frac{35474.0}{T_K} - 771.54  + 114.723*log(T_K))*IS \nonumber \\
- 			& - 2698.0/T_K*IS^{1.5} + 1776.0/T_K*IS^2 \nonumber \\
+ 			& - 47.986*log(T_K))*\sqrt{IS} + ( \frac{35474}{T_K} - 771.54  + 114.723*log(T_K))*IS \nonumber \\
+ 			& - \frac{2698}{T_K}*IS^{1.5} + \frac{1776}{T_K}*IS^2 \nonumber \\
  KS     	&= exp(KS_{int})*(1 - 0.001005*S) \nonumber \\
 \end{align*}
 
@@ -415,11 +410,11 @@ KW 		&= exp(148.9802 - \frac{13847.26}{T_K}  - 23.6521*log(T_K) \nonumber \\
 		&+ (\frac{118.67}{T_K} - 5.977 + 1.0495*log(T_K))*\sqrt{S} - 0.01615*S) \nonumber \\
 \text{Boron} \nonumber \\
 KB 		&= exp((-8966.90 - 2890.53*\sqrt{S} - 77.942*S \nonumber \\
-		&+ 1.728*S*\sqrt{S} - 0.0996*S2)/T_K + 148.0248 \nonumber \\
-		& + 137.1942*sqrtS + 1.62142*S \nonumber \\
+		&+ 1.728*S*\sqrt{S} - 0.0996*S^2)/T_K + 148.0248 \nonumber \\
+		& + 137.1942*\sqrt{S} + 1.62142*S \nonumber \\
 		&- (24.4344 + 25.085*\sqrt{S} + 0.2474*S)*log(T_K)  \nonumber \\ 
 		&+ 0.053105*\sqrt{S}*T_K) \nonumber \\
-TB 		&= 0.0004326*S/35 \nonumber \\
+TB 		&= 0.0004326*\frac{S}{35} \nonumber \\
 \text{Carbon eq constants} \nonumber \\
 K1 		&= 10^{(-(\frac{3633.86}{T_K} - 61.2172 + 9.6777 *log(T_K) - 0.011555*S + 0.0001152*S^2))}*1.23	\nonumber \\
 K2 		&= 10^{(-(\frac{471.8}{T_K} + 25.9290 - 3.16967*log(T_K) - 0.01781*S + 0.0001122*S^2))}*0.53 \nonumber \\	
@@ -438,10 +433,10 @@ Iterations
 h 			&=  10^{-pH_{init}}	\nonumber                              \\
 h_{free} 	&=  \frac{h}{Free_{2_T}}	 \nonumber \\
 f0 			&= (  DIC*1e-6*\frac{K1*h+2*K1*K2}{h*h+K1*h+K1*K2}    \nonumber\\
-			&  - h_{free} + \frac{KW}{h} - Alk*1e-6 +TB  /(1+h/KB) )*1e6 \nonumber  \\
+			&  - h_{free} + \frac{KW}{h} - Alk*1e-6 + \frac{TB}{1+\frac{h}{KB}} )*1e6 \nonumber  \\
 df0 		&= (  DIC*1e-6*\frac{K1 +2*K1*K2}{h^2+K1*h+K1*K2}  \nonumber\\
 			&  -DIC*1e-6*\frac{(K1*h+2*K1*K2)}{(h^2+K1*h+K1*K2)^2}*(2*h+K1)  \nonumber\\
-			&  -TB *1/(1+h/KB)^2 / KB             \nonumber             \\
+			&  -TB *\frac{1}{(1+ \frac{h}{KB})^2} / KB             \nonumber             \\
 			&  -\frac{KW}{h^2} - \frac{1}{Free_{2_T}} )*1e6  * (-log(10)*10^{-pH}) \nonumber \\
 pH 			&= pH - \frac{f0}{df0} \nonumber                              \\
 H 			&= 10^{-pH} \nonumber                              \\
@@ -471,13 +466,13 @@ CO3  		&= \frac{DIC*K1*K2}{denom}      \nonumber \\
 \begin{tabular}{|c|c|c|c| c | c|} 
 \hline
 \bfseries{Variable} & \bfseries{Iter. 1} & \bfseries{Iter. 2} & \bfseries{Iter. 3}  &  \bfseries{Iter. 4} & \bfseries{Iter. 5} \\ \hline
-$O_2$	&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
-DIC		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
-TA		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
-pH		& 0.036092734	&0.002355758	&1.41E-05		&6.93E-06		&6.93E-06 		\\
-CO2		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
-HCO3	& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
-CO3		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
+$O_2$		&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
+$DIC$		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
+$TA$		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
+$pH$		& 0.036092734	&0.002355758	&1.41E-05		&6.93E-06		&6.93E-06 		\\
+$CO2$		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
+$HCO3$		& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
+$CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
 \hline
 \end{tabular}
 \caption{RMSE for 5 iterations of the Newton-raphson carbon chemistry iterative solution.}
