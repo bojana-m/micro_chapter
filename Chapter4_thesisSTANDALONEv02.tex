@@ -85,7 +85,7 @@ Microalgae are tiny organisms..
 
 
 
-
+[BM for ref: At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes. The linear increase in DO caused by these artefacts were used to calculate net photosynthesis. (reference Tamburic 2015)]
 
 
 
@@ -93,13 +93,38 @@ Microalgae are tiny organisms..
 
 \section{Methods}
 
-\subsection{Data Model: Data description and collection methods}
+\subsection{Data Model: Photobioreactor setup, experimental design and data collection methods}
 
-O$_2$, pH, DIC and alk observations collected over 4 days.
+All data collection methods for this chapter were carried out by Peter Wood as part of a collection of PhD experiments (Peter Wood 2019 UTS PhD).
+
+Microalgal culture \emph{Nannochloropsis oceanica} (Droop) Green (strain CS-179) obtained from the Australian National Algae Culture Collection was cultured in 200$\mskip3mu$mL conical flasks; maintained in an incubator (Labec Pty Ltd) at 20$^{\circ}$C, under an irradiance of
+50$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ of cool-white fluorescent light at a 12 hour light/12 hour dark cycle. Stock cultures were grown in f/2 saltwater medium \cite{guillard1962studies} and diluted 5 days prior to the start of experiments to ensure that \emph{N. oceanica} was in the exponential growth phase and not nutrient deprived. f/2 was sparged prior to stock culture dilutions to maximise carbon and oxygen content.  
+
+\emph{N. oceanica} was cultured in four, 500$\mskip3mu$mL environmental photobioreactors (ePBRs, Phenometrics Inc) with a 10\% v/v inoculation of stock culture. Top-side illumination over a path length of 25$\mskip3mu$cm was provided by a cool-white light LED, whilst temperature was maintained at 27$^{\circ}$C using a Peltier heater-cooler connected to a water jacket. In-built thermocouples, calibrated against external temperature sensors attached to the Firesting module (TeX4; PyroScience GmbH), measured every 5 minutes were used to control the Peltier heater-cooler jacket through a feedback loop to an accuracy of $\pm$ 0.2$^{\circ}$C. pH was also measured in 5 min intervals by in-built pH electrodes (Van London Inc); controlled by periodic CO2 (5\%) injections using valves in the ePBRs. pH was 3-point calibrated using pH buffer solutions at pH 4.00 $\pm$ 0.02, pH 7.00 $\pm$ 0.02 and pH 10.00 $\pm$ 0.02.  PBR mixing was controlled by magnetic stirring bars at 110 rpm. All four ePBRs were aerated with filtered/humidified air through a 1.2$\mskip3mu$mm needle valve (Terumo Co). 
 
 
-Gas, temperature, light and dilution rate were used as forcings.
+A period of 2 days was allowed for \emph{N. occulata} to acclimate to the ePBRs at an irradiance of 500$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ and a temperature of 27$^{\circ}$C. Following this acclimation period, the PBR was set to the experimental condition of 2,000$\mskip3mu$$\mu$mol$\mskip3mu$photons$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ for another 2 days and a 12 hour light/12 hour dark cycle with a temperature of 27$^{\circ}$C. 
+ePBRs were maintained at an optical density (OD) of 0.4 using manual dilutions, creating a semi-batch culturing system. Dilutions occurred once per day (one hour before the light cycle), using aerated f/2 media. The experiment was conducted over a period of 4 days, samples were extracted post and prior dilution, as well as half way through the light cycle. %2$\mskip3mu$mL samples were extracted to measure: OD$_{750}$, cell density, nitrogen concentration and phosphorous concentration. 50$\mskip3mu$mL was extracted to examine alkalinity, dry weight, carbon percentage and nitrogen percentage. 
+50$\mskip3mu$mL was extracted to examine total alkalinity and dissolved inorganic carbon. 
+%Both pH and DO were measured every 5 mins and 1 min respectively; to generate dynamic daily profiles. 
+Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (OXROB10-OI; PyroScience GmbH) attached to a FireStingO2 logger (PyroScience GmbH). DO measurements were taken every 60 seconds and temperature-corrected using a temperature extension module (TeX4; PyroScience GmbH). DO was two-point calibrated using air-saturated seawater (100\% saturation) and sodium sulfate-saturated water (0\% saturation). At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes to allow for observations of net photosynthesis. Alkalinity was measured twice a day using TA titration; 0.1$\mskip3mu$M hydrochloric acid on 30$\mskip3mu$mL of \emph{N. oceanica} media using an auto-titrator (800 Dosino; Metrohm AG). 
 
+[Chris: DIC measurement collection description]
+
+[BM: confirm that reference with PW]
+
+
+\subsection{Data model: Data treatment, distributions and measurement error}
+
+Valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
+Dissolved oxygen, pH, dissolved inorganic carbon and total alkalinity observations for 4 days post acclimation were assimilated. 
+While pH observations were calibrated and corrected, it was visible that O$_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the O$_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. 
+
+The data model assigned log normally distributed observation errors for each instrument;
+O$_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log(O$_2$), $\sigma_{O_2}$), pH$_{obs}$ $\sim$ Log$\mathcal{N}$(log(pH),  $\sigma_{pH}$), DIC$_{obs}$ $\sim$ Log$\mathcal{N}$(log(DIC), $\sigma_{DIC}$), TA$_{obs}$ $\sim$ Log$\mathcal{N}$(log(TA), $\sigma_{DIC}$), where the standard deviations ($\sigma_{O_2}$, $\sigma_{pH}$, $\sigma_{DIC}$) were unknown parameters to be estimated as part of the assimilating model. Dissolved inorganic carbon and total alkalinity measurements were obtained from the same instrument thus the error is shared between these states. Initial observation error priors started at $\sigma_{O_2}$ $\sim$ Log$\mathcal{N}$(log(0.1), 0.5) and then were adjusted during the PMMH tuning phase. 
+
+
+[Chris/SW: should I talk about the thinning out of O$_2$ and pH obs?]
 
 
 \subsection{Process model: Carbon chemistry}
@@ -543,6 +568,7 @@ $CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
 \FloatBarrier
 \subsection{Posteriors}
 
+[BM: Talk about the tuning of the observation error priors $\sigma_{O_2}$ etc]
 
 
 \begin{figure}
