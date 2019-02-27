@@ -275,41 +275,49 @@ A summary of the ode's that make up the process model:
 %\caption{Multi-row table}
 %\begin{center}
 %\begin{tabular}{|c|c|c|c|c|}
-\begin{longtable}{|c|c|c|c|c|}
+\begin{longtable}{|c|c|l|c|l|}
 	\hline 
 	& Symbol & Description  & Prior / Value & Unit \\
     \hline
     \multirow{4}{*}{\rotatebox[origin=c]{90}{State variable initial conditions }}
-    & $DIC^0$ & Dissolved inorganic carbon &  & $\mu$M/L \\
-    & $O_2^0$ & Oxygen &  & $\mu$M/L \\
-    & TA$^0$  & Total alkalinity & & $\mu$M/L \\
-    & P$^0$  & Rate of photosynthesis & & $\mu$M/L/day\\
-    & R$^0$  & Rate of respiration & & $\mu$M/L/day\\
+    & $DIC^0$ & Dissolved inorganic carbon &  & $\mu$M L$^{-1}$ \\
+    & $O_2^0$ & Oxygen &  & $\mu$M L$^{-1}$ \\
+    & TA$^0$  & Total alkalinity & & $\mu$M L$^{-1}$ \\
+    & P$^0$  & Rate of photosynthesis & & $\mu$M L$^{-1}$ day$^{-1}$\\
+    & R$^0$  & Rate of respiration & & $\mu$M L$^{-1}$ day$^{-1}$\\
     & pH$^0$ & -  & & log$_{10}$(-mol/L H+)  \\
-    & $CO_2$$^0$ & Carbon dioxide  & & $\mu$M/L \\
-    & $HCO_3^-$$^0$ & Bicarbonate & & $\mu$M/L  \\
-    & $CO_3^{2-}$$^0$ & Carbonate &  & $\mu$M/L \\
+    & $CO_2$$^0$ & Carbon dioxide  & & $\mu$M L$^{-1}$ \\
+    & $HCO_3^-$$^0$ & Bicarbonate & & $\mu$M L$^{-1}$  \\
+    & $CO_3^{2-}$$^0$ & Carbonate &  & $\mu$M L$^{-1}$ \\
+    \hline
+	\multirow{4}{*}{\rotatebox[origin=c]{90}{Flux into cells}}
+	& $ P_1 $ & Maximum photosynthesis rate  &  & $\mu$M L$^{-1}$ hour$^{-1}$ \\
+	& $ R_1 $ & Respiration rate &  & $\mu$M L$^{-1}$ hour$^{-1}$ \\ 
+	& $ K_m $ & Carbon restriction &  & $\mu$M L$^{-1}$ \\
+	& $ RQ_d $ & Daytime respiratory quotient &  & - \\
+	& $ RQ_n $ & Night respiratory quotient &  & - \\
+	& $ R_R $ & Redfield ratio &  & - \\	
     \hline
     \multirow{4}{*}{\rotatebox[origin=c]{90}{Gas transfer terms }}
-    &$ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1 & - \\
+    & $ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1 & - \\
     & $x_{CO_2}^{air} $ & mole fraction of CO$_2$ atmosphere& 400 & ppm \\ 
-    & $CO_{2H}$  & Equilibrium CO$_2$ concentration  & Eq. \ref{eq:CO2H_eq} & $\mu$M/L  \\
+    & $CO_{2H}$  & Equilibrium CO$_2$ concentration  & Eq. \ref{eq:CO2H_eq} & $\mu$M L$^{-1}$  \\
     & $CO_{2}^{air}$ & sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$ & \\
     & $kLa_{ CO_2}^{air}$ & Mass transfer coefficient for CO$_2$ & 0.893$kLa_{\phantom{C}O_2}^{air}$  & day$^{-1}$ \\
     
     & $x_{O_2}^{air} $ & mole fraction of O$_2$ atmosphere& 0.2094 & atm \\ 
-    & $\phantom{C}O_{2H}$  & Equilibrium O$_2$ concentration  & Eq. \ref{eq:O2H_eq} & $\mu$M/L  \\
+    & $\phantom{C}O_{2H}$  & Equilibrium O$_2$ concentration  & Eq. \ref{eq:O2H_eq} & $\mu$M L$^{-1}$  \\
 	& $\phantom{C}O_{2}^{air}$ & sat O$_2$ conc with atmosphere &   $x_{O_2}^{air} O_{2H}$ & \\
     & $\tau$ & half-life of $kLa_{\phantom{C}O_2}^{air}$  & range(2-20) & min$^{-1}$\\
     & $kLa_{\phantom{C}O_2}^{air}$ & Mass transfer coefficient for O$_2$ & $\ln(2) * 24*60/\tau$ & day$^{-1}$\\
    
     \hline
         \multirow{4}{*}{\rotatebox[origin=c]{90}{Dilution terms }}
-    &$  Q ^{M} $ & rate  &  & ml/day \\
+    &$  Q ^{M} $ & rate  &  & ml day$^{-1}$ \\
     &$  V $ & Volume of the reactor  & 500 & ml \\
-    &$  DIC ^{M} $ & Media dissolved inorganic carbon  & 1724.20 & $\mu$M/L \\ 
-    &$	\phantom{CC}O_2^{M}$ & Media oxygen concentration & 226.65 & $\mu$M/L \\
-    &$	\phantom{C}TA^{M}$  & Media total alkalinity & 1797.90 & $\mu$M/L
+    &$  DIC ^{M} $ & Media dissolved inorganic carbon  & 1724.20 & $\mu$M L$^{-1}$ \\ 
+    &$	\phantom{CC}O_2^{M}$ & Media oxygen concentration & 226.65 & $\mu$M L$^{-1}$ \\
+    &$	\phantom{C}TA^{M}$  & Media total alkalinity & 1797.90 & $\mu$M L$^{-1}$
     \\
     
         \hline
@@ -340,13 +348,10 @@ A summary of the ode's that make up the process model:
 	Symbol & Variable & Units  \\ \hline
 	DIC &  Dissolved inorganic carbon concentration & $\mu$mol/L  \\
 	O$_2$ & Oxygen  &  $\mu$mol/L \\
-%	B & Microalgae population & concentration of cells**[BM]  \\
 	pH & -  & log$_{10}$(-mol/L H+)  \\
 	CO$_2$ & Carbon dioxide  & $\mu$mol/L \\
 	HCO$_3^-$ & Bicarbonate & $\mu$mol/L  \\
 	CO$_3^{2-}$ & Carbonate  & $\mu$mol/L \\
-	PAC & Photosynthetically active carbon & $\mu$mols/L  \\
-	mm & - & - \\
 	kLA$_{O2}$  & Mass transfer coefficient for O$_2$ &  d$^{-1}$  \\
 	
 	CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$mols/L  \\
@@ -370,7 +375,7 @@ A summary of the ode's that make up the process model:
 \begin{tabular}{c c  | c}
 	 \hline
 	 Symbol & Variable & Units  \\ \hline
-	I &  Light Intensity  &  normalised to 0-1   \\
+	I &  Light Intensity  &  normalised to 0/1   \\
 	T & Temperature & $\circ$ C  \\
 	T$_K$ & Temperature &  K  \\
 	$\xi$ & gasflow &  on/off (1,0)  \\
