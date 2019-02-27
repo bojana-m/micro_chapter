@@ -129,28 +129,28 @@ O$_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log(O$_2$), $\sigma_{O_2}$), pH$_{obs}$ $\
 
 \subsection{Process model: Carbon chemistry}
 
-To calculate the carbon chemistry of the photo-bioreactor, we would ideally use CO2SYS \cite{lewis1998program} to calculate HCO$_3^-$, CO$_2$, CO$_3$ and pH. 
+Ideally CO2SYS \cite{lewis1998program} would have been used to calculate the carbon chemistry of the photo-bioreactor. 
 CO2SYS is a program developed for CO$_2$ system calculations (CO2SYS) that calculates and returns a detailed state of the carbonate system of oceanographic water samples in seawater and freshwater \cite{lewis1998program}.
-It uses two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure). 
+Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure). 
 
-To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly define 2 iterations of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process considering a function, its derivative and an initial starting value. Vital to the convergence of the Newton-Raphson method is a good starting value. To provide a good starting value, we randomly sample from a range of CO2SYS input parameters (temperature = 20-30, salinity = 30-40, DIC = 200-2500, and alkalinity = 1500-3000) and fit an approximating equation to pH as a function of DIC, S and T (alk?). This gives us a close initial starting value for the Newton-Raphson method. 
+To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
+$ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
+considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
 
-Converges in 2-3 iterations 
 
 
 %%
 %% additional info
 %%
 
-Choice of H2CO3 and HCO3- dissociation constants K1 and K2 was Mehrbach (refit BY DICKSON AND MILLERO) [BM: After the iterative approach is finalised, the K1 and K2 constants are adjusted based on measurements taken during the experiment, K1*1.23 and K2*0.53 measured during experiment] temperature: 2-35,  salinity: 20-40, Seawater scale, Artificial seawater.
 
 
 
-The CO2SYS Matlab version \cite{van2011matlab} was used to produce values of CO$_2$ and HCO$_3^-$ across DIC range 200-2500. 
-Approximating equations were fit
+%The CO2SYS Matlab version \cite{van2011matlab} was used to produce values of CO$_2$ and HCO$_3^-$ across DIC range 200-2500. 
 
 
-Total inorganic CO$_2$ (TCO$_2$) is the sum of the dissolved CO$_2$, the carbonate (CO$_{3-2}$), and the bicarbonate (HCO$_3^-$).
+
+% Total inorganic CO$_2$ (TCO$_2$) is the sum of the dissolved CO$_2$, the carbonate (CO$_{3-2}$), and the bicarbonate (HCO$_3^-$).
 
 
 
@@ -177,13 +177,9 @@ S(0.023517 - 0.023656(T_K/100) + 0.0047036(T_K/100)^2))
 \end{aligned}
 \end{equation}
 where T$_K$ is the temperature (K) and S is salinity (ppt).
-
 %% from Weiss 1974 paper:
 %K0 may be expressed either in moles/1 * atm, referring to a liter of solution at %the temperature of the measurement and an atmosphere fugacity in
 %the gas phase, or in moles/kg * atm, referring to a kilogram of solution.
-
-
-
 Similarly the equilibrium concentration for O$_2$ solubility in water O$_{2H}$ is calculated using Henry's law,
 \begin{equation}\label{eq:O2H_eq}
 O_{2H}=K0_{O2}*fO2*1.0220*1e-6
@@ -196,8 +192,6 @@ K0_{O2} =  (exp(-1282.8704 + 36619.96/T_K + 223.1396*log(T_K) -0.354707*T_K \\
 \end{aligned}
 \end{equation}
 where T$_K$ is the temperature (K) and S is salinity (ppt).
-
-
 %from Weiss 1970:
 %\begin{equation}
 %\begin{aligned}
@@ -205,29 +199,29 @@ where T$_K$ is the temperature (K) and S is salinity (ppt).
 %S(-0.034892 + 0.015568(T_K/100) - 0.0019387(T_K/100)^2))
 %\end{aligned}
 %\end{equation}
-
 The equilibrium concentrations for O$_2$ and CO$_2$ are modelled together with the gas turning on and off during the experiment, as
 \begin{equation}
-  kLA_{O2} \xi (O_{2H} - O_{2})
+ Q^{air} kLa_{O_2}^{air} (O_{2H} - O_{2})
 \end{equation}
 \begin{equation}
-0.893 kLA_{O2} \xi (CO_{2H} - CO_{2})
+ Q^{air} kLa_{CO_2}^{air} (CO_{2H} - CO_{2})
 \end{equation}
-where $\xi$ is the gas state (1= on, 0= off), and kLA$_{O2}$ is the mass transfer coefficient for air (d$^{-1}$), and 0.893 is the ratio between measured O$_2$ and CO$_2$ mass transfer constants \cite{grima1993gas}.
+where $Q^{air}$ is the gas state (1= on, 0= off), $kLa_{O_2}^{air}$ and $kLa_{CO_2}^{air}$ are the mass transfer coefficients for air (d$^{-1}$), and 0.893 is the ratio between measured $O_2$ and $CO_2$ mass transfer constants \cite{grima1993gas}.
 
 
 
 \subsection{Process model: Photosynthesis and respiration}
 
 Net photosynthesis
-\begin{equation}
-dDIC/dt  =  -P_1*I*mm + R_1 
-\end{equation}
-\begin{equation} 
-dO_2/dt	 =  \frac{P_1*I*mm - R_1}{R_Q}
-\end{equation}
-
-Photosynthesis (P$_1$) and respiration (R$_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+\begin{align}
+\frac{\partial DIC}{dt} &=&  -P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  + R_1 
+\\
+\frac{\partial O_2}{dt}	&=&  \frac{1}{(RQ_d I + RQ_n(1-I))}(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  - R_1)
+\\
+\frac{\partial TA}{\partial t}  &=&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-})
+\\
+\end{align}
+Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
 \begin{displaymath}
 P_1(t+\Delta t) = P_1(t) + r_P
 \end{displaymath}
@@ -240,37 +234,39 @@ r_P \sim N(0, \sigma_{r_P})
 r_R \sim N(0, \sigma_{r_R})
 \end{math}, and \begin{math}
 \Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as a parameter to be inferred. 
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. 
 
 
-R$_Q$ is the respiratory quotient, the ratio of CO$_2$ produced and O$_2$ consumed by a cell. 
+$RQ_d$ and $RQ_n$ are the day and night respiratory quotients, the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
 
 
 
 
+The michaelis menton term $ \frac{HCO_3^-}{K_m + HCO_3^-} $ represents the photosynthetically active carbon that the microalgae use for photosynthesis. 
+%This can be CO$_2$, HCO$_3^-$, or a combination of both, eg $PAC = CO_2 + HCO_3^-$ if the microalgae are using both carbon dioxide and bicarbonate for photosynthesis.  
 
-PAC is Photosynthetically Active Carbon, this is the type of carbon that the microalgae use for photosynthesis. This can be CO$_2$, HCO$_3^-$, or a combination of both, eg $PAC = CO_2 + HCO_3^-$ if the microalgae are using both carbon dioxide and bicarbonate for photosynthesis.  
+\subsection{Process model: Dilution}
 
-\begin{equation}
-PAC = HCO_3^-
-\end{equation}
+$ \frac{Q^M}{V}(DIC^{M} - DIC) $
+
+$ \frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2}) $
+
+$ \frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA) $
 
 
-\begin{equation}
-mm = \frac{PAC}{K_m + PAC} 
-\end{equation}
+
 
 \subsection{Process model: Ordinary differential equations}
 
-Ode's:
+A summary of the ode's that make up the process model:
 %\begin{equation}
 \begin{align}
 \text{Rate} & & \text{flux into cells}            &            &\text{gas transfer}   &     & \text{dilution} \nonumber                              \\
-\frac{\partial DIC}{\partial t}&=&                      - (P - R)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(DIC^{M} - DIC)       \nonumber \\
-                                           &  &                                   &      &+\hat Q^{co2}kLa_{ CO_2}^{co2}(CO_{2}^{co2} - CO_{2})    \\
-\frac{\partial O_2}{\partial t}&=& \frac{1}{R_Q}  (P - R)&      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} -   \phantom{CC}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2})     \nonumber   \\
-                                           &  &                                   &      &+\hat Q^{co2}kLa_{\phantom{C}O_2}^{co2}(\phantom{C}O_{2}^{co2} - \phantom{C}O_{2})    \\
-\frac{\partial TA}{\partial t} & =&      R_R (P \phantom{ + R})& & & & +\frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA)
+\frac{\partial DIC}{\partial t}&=&                      - (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(DIC^{M} - DIC)       \nonumber \\
+%                                           &  &                                   &      &+\hat Q^{co2}kLa_{ CO_2}^{co2}(CO_{2}^{co2} - CO_{2})    \\
+\frac{\partial O_2}{\partial t}&=& \frac{(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)}{(RQ_d I + RQ_n(1-I))}  &      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} - \phantom{I}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2})     \nonumber   \\
+ %                                          &  &                                   &      &+\hat Q^{co2}kLa_{\phantom{C}O_2}^{co2}(\phantom{C}O_{2}^{co2} - \phantom{C}O_{2})    \\
+\frac{\partial TA}{\partial t} & =&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} \phantom{ + R_1})& & & & +\frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{I}TA)
 \end{align}
 %\end{equation}
 
@@ -317,19 +313,19 @@ Ode's:
     \\
     
         \hline
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{Other dilution terms }}
-    &$ \hat Q ^{CO2} $ &indicator for dilution & 0 or 1 & - \\
-  
-    & $x_{\phantom{C}O_2}^{CO2} $ & mole fraction of & 0 & - \\ 
-    & $\phantom{C}O_{2}^{CO2}$ & sat CO$_2$ conc with CO$_2$ &   $x_{O_2}^{CO2} O_{2H}$ & \\
-    & $kLa_{ \phantom{C}O_2}^{CO2}$ & mass transfer coefficient &   & day$^{-1}$ \\
-    & $\phantom{C}O_2^{CO2}$  & & & \\
-    
-    & $x_{CO_2}^{CO2} $ & mole fraction of  & 1 & ppm \\ 
-    & $CO_{2}^{CO2}$ & sat CO$_2$ conc with CO$_2$ &   $x_{CO_2}^{CO2} CO_{2H}$ & \\
-    & $kLa_{ CO_2}^{CO2}$ & mass transfer coefficient & 0.893$kLa_{\phantom{C}O_2}^{CO2}$  & day$^{-1}$ \\
-    &$  CO_{2} ^{CO2} $ &   &  &  \\   
-    \hline
+%    \multirow{4}{*}{\rotatebox[origin=c]{90}{Other dilution terms }}
+%    &$ \hat Q ^{CO2} $ &indicator for dilution & 0 or 1 & - \\
+%  
+%    & $x_{\phantom{C}O_2}^{CO2} $ & mole fraction of & 0 & - \\ 
+%    & $\phantom{C}O_{2}^{CO2}$ & sat CO$_2$ conc with CO$_2$ &   $x_{O_2}^{CO2} O_{2H}$ & \\
+%    & $kLa_{ \phantom{C}O_2}^{CO2}$ & mass transfer coefficient &   & day$^{-1}$ \\
+%    & $\phantom{C}O_2^{CO2}$  & & & \\
+%    
+%    & $x_{CO_2}^{CO2} $ & mole fraction of  & 1 & ppm \\ 
+%    & $CO_{2}^{CO2}$ & sat CO$_2$ conc with CO$_2$ &   $x_{CO_2}^{CO2} CO_{2H}$ & \\
+%    & $kLa_{ CO_2}^{CO2}$ & mass transfer coefficient & 0.893$kLa_{\phantom{C}O_2}^{CO2}$  & day$^{-1}$ \\
+%    &$  CO_{2} ^{CO2} $ &   &  &  \\   
+%    \hline
 \end{longtable}  
     
 %\end{tabular}
@@ -415,6 +411,11 @@ Decide whether the parameters vary in time or not.
 
 
 \subsection{Carbon chemistry iterative solution}
+
+Choice of H2CO3 and HCO3- dissociation constants K1 and K2 was Mehrbach (refit BY DICKSON AND MILLERO) [BM: After the iterative approach is finalised, the K1 and K2 constants are adjusted based on measurements taken during the experiment, K1*1.23 and K2*0.53 measured during experiment] temperature: 2-35,  salinity: 20-40, Seawater scale, Artificial seawater.
+
+
+
 
 Total Sulfur
 \begin{align*}
