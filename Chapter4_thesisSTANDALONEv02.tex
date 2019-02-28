@@ -135,7 +135,9 @@ Using two of the four measurable carbonate system parameters (total alkalinity, 
 
 To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
-considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). %HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
+considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). A range of initial conditions and parameter values were tested, and each converged with RMSE $<$ 0.01 across $pH$, $HCO_3^-$, $CO_2$, and $CO_3$, $DIC$, $O_2$, $TA$ by the 3rd iteration (Figure \ref{fig:iterative_carbon_and_states} and Table \ref{table:rmse_iterative}).
+
+%HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
 
 
 \subsubsection{CO2SYS constants and iterative solution for pH, HCO$_3^-$, CO$_2$, and CO$_3$}
@@ -172,7 +174,7 @@ KB 		&= exp(\frac{(-8966.90 - 2890.53 \sqrt{S} - 77.942 S + 1.728 S \sqrt{S} - 0
 TB 		&= 0.0004326 \frac{S}{35} \nonumber 
 \end{align*}
 
-Choice of dissociation constants $K_1$ and $K_2$ were Mehrbach (refit BY DICKSON AND MILLERO) with 1.23$K_1$ and 0.53$K_2$ measured experiment specific adjustments:
+Choice of carbonate dissociation constants $K_1$ and $K_2$ were Mehrbach \cite{mehrbach1973measurement} (refit by Dickson and Millero \cite{dickson1987comparison}) with 1.23$K_1$ and 0.53$K_2$ measured experiment specific adjustments:
 \begin{align}
 K_1 		&= 10^{(-(\frac{3633.86}{T_K} - 61.2172 + 9.6777 log(T_K) - 0.011555 S + 0.0001152 S^2))}*1.23 \\
 K_2 		&= 10^{(-(\frac{471.8}{T_K} + 25.9290 - 3.16967 log(T_K) - 0.01781 S + 0.0001122 S^2))}*0.53 	
