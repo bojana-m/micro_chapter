@@ -135,10 +135,10 @@ Using two of the four measurable carbonate system parameters (total alkalinity, 
 
 To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
-considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
+considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). %HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
 
 
-\subsubsection{Carbon chemistry iterative solution}
+\subsubsection{CO2SYS constants and iterative solution for pH, HCO$_3^-$, CO$_2$, and CO$_3$}
 
 Total Sulfur:
 \begin{align*}
@@ -147,7 +147,7 @@ IS     	&= 19.924 \frac{S}{(1000 - 1.005 S)} \nonumber \\
 KS_{int} 	&= -\frac{4276.1}{T_K} + 141.328 - 23.093 log(T_K) + (-\frac{13856.0}{T_K} + 324.57 \nonumber\\ 			 
 & - 47.986 log(T_K)) \sqrt{IS} + ( \frac{35474}{T_K} - 771.54  + 114.723 log(T_K)) IS \nonumber \\
 & - \frac{2698}{T_K} IS^{1.5} + \frac{1776}{T_K} IS^2 \nonumber \\
-KS     	&=  (1 - 0.001005 S)e^{(KS_{int})} \nonumber \\
+KS     	&=  (1 - 0.001005 S)e^{(KS_{int})} \nonumber 
 \end{align*}
 
 Fluorine:
@@ -155,18 +155,21 @@ Fluorine:
 TF       	&= \frac{\frac{0.000067 S}{18.9984}}{1.80655} \nonumber \\
 KF       	&= e^{(-(-\frac{874.0}{T_K} - 0.111 \sqrt{S} + 9.68))} \nonumber \\
 SWS_{2_T}  	&= \frac{(1 + \frac{TS}{KS})}{(1 + \frac{TS}{KS} + \frac{TF}{KF})} \nonumber \\
-Free_{2_T} 	&= 1 + \frac{TS}{KS} \nonumber \\
+Free_{2_T} 	&= 1 + \frac{TS}{KS} \nonumber 
 \end{align*}
 
 H2O dissoc:
 \begin{align*}
 KW 		&= e^{(148.9802 - \frac{13847.26}{T_K}  - 23.6521 log(T_K) 
-+ (\frac{118.67}{T_K} - 5.977 + 1.0495 log(T_K)) \sqrt{S} - 0.01615 S)} \nonumber \\
-\text{Boron:} \nonumber \\
++ (\frac{118.67}{T_K} - 5.977 + 1.0495 log(T_K)) \sqrt{S} - 0.01615 S)} \nonumber 
+\end{align*}
+
+Boron:
+\begin{align*}
 KB 		&= exp(\frac{(-8966.90 - 2890.53 \sqrt{S} - 77.942 S + 1.728 S \sqrt{S} - 0.0996 S^2)}{T_K} \\
 &+ 148.0248 + 137.1942 \sqrt{S} + 1.62142 S \\
 &- (24.4344 + 25.085 \sqrt{S} + 0.2474 S) log(T_K) + 0.053105 T_K \sqrt{S}) \nonumber \\
-TB 		&= 0.0004326 \frac{S}{35} \nonumber \\
+TB 		&= 0.0004326 \frac{S}{35} \nonumber 
 \end{align*}
 
 Choice of dissociation constants $K_1$ and $K_2$ were Mehrbach (refit BY DICKSON AND MILLERO) with 1.23$K_1$ and 0.53$K_2$ measured experiment specific adjustments:
@@ -195,39 +198,33 @@ df_n 			&= (  DIC*1e-6*\frac{K_1 + 2 K_1 K_2}{h_n^2 + K_1 h_n + K_1 K_2}  \nonum
 &  -\frac{KW}{h_n^2} - \frac{1}{Free_{2_T}} )*1e6  * (-log(10)*10^{-pH}) \\
 pH_{n+1}		&= pH_n - \frac{f_n}{df_n}  \\
 H_{n+1} 		&= 10^{-pH_{n+1}}  \\
-CO2_{n+1}  		&= \frac{H_{n+1}^2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
-HCO3_{n+1} 		&= \frac{H_{n+1} K_1 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
-CO3_{n+1}  		&= \frac{K_1 K_2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}\label{newton_raph_iterations_end} 
+CO_{2_{n+1}}  		&= \frac{H_{n+1}^2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
+HCO_{3_{n+1}} 		&= \frac{H_{n+1} K_1 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
+CO_{3_{n+1}}  		&= \frac{K_1 K_2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}\label{newton_raph_iterations_end} 
 \end{align}
 
 
 
 
 \begin{figure}
-	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_states}}
-	\caption[.]{Iterative vs exact solution for state variables $O_2$, $DIC$, and $TA$.}
-	\label{fig:iterative_states}
+	\centerline{\includegraphics[width=0.9\textwidth]{images_microalgae/plots/iterative_carbon_and_states}}
+	\caption[.]{Iterative (3rd iteration) vs exact solution for carbon chemistry $CO_2$, $HCO_3$, $CO_3$, $pH$ and state variables $O_2$, $DIC$, and $TA$.}
+	\label{fig:iterative_carbon_and_states}
 \end{figure}
 
-
-\begin{figure}
-	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_carbon}}
-	\caption[.]{Iterative vs exact solution for carbon chemistry $CO_2$, $HCO_3$, $CO_3$, and $pH$.}
-	\label{fig:iterative_carbon}
-\end{figure}
 
 
 \begin{table}
 	\begin{tabular}{|c|c|c|c| c | c|} 
 		\hline
 		\bfseries{Variable} & \bfseries{Iter. 1} & \bfseries{Iter. 2} & \bfseries{Iter. 3}  &  \bfseries{Iter. 4} & \bfseries{Iter. 5} \\ \hline
-		$O_2$		&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
-		$DIC$		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
-		$TA$		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
 		$pH$		& 0.036092734	&0.002355758	&1.41E-05		&6.93E-06		&6.93E-06 		\\
-		$CO2$		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
-		$HCO3$		& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
-		$CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
+		$CO_2$		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
+		$HCO_3$		& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
+		$CO_3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
+		$DIC$		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
+		$O_2$		&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
+		$TA$		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
 		\hline
 	\end{tabular}
 	\caption{RMSE for 5 iterations of the Newton-raphson carbon chemistry iterative solution.}
