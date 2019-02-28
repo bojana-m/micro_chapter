@@ -118,7 +118,7 @@ Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (
 
 Valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
 Dissolved oxygen, pH, dissolved inorganic carbon and total alkalinity observations for 4 days post acclimation were assimilated. 
-While pH observations were calibrated and corrected, it was visible that O$_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the O$_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. 
+While pH observations were calibrated and corrected, it was visible that O$_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the O$_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
 
 The data model assigned log normally distributed observation errors for each instrument;
 O$_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log(O$_2$), $\sigma_{O_2}$), pH$_{obs}$ $\sim$ Log$\mathcal{N}$(log(pH),  $\sigma_{pH}$), DIC$_{obs}$ $\sim$ Log$\mathcal{N}$(log(DIC), $\sigma_{DIC}$), TA$_{obs}$ $\sim$ Log$\mathcal{N}$(log(TA), $\sigma_{DIC}$), where the standard deviations ($\sigma_{O_2}$, $\sigma_{pH}$, $\sigma_{DIC}$) were unknown parameters to be estimated as part of the assimilating model. Dissolved inorganic carbon and total alkalinity measurements were obtained from the same instrument thus the error is shared between these states. Initial observation error priors started at $\sigma_{O_2}$ $\sim$ Log$\mathcal{N}$(log(0.1), 0.5) and then were adjusted during the PMMH tuning phase. 
@@ -269,8 +269,8 @@ CO_{2H}=K0_{CO2}*fCO2*1.0220*1e6
 where fCO2 (atm) is the fugacity or approximately the partial pressure of CO$_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}. K0$_{CO2}$ (mol/kg$_{soln}$/atm) is the solubility of gas in seawater [BM: ask Chris: solubility of gas? is this right] and is calculated from the fitted van't Hoff equation and the logarithmic Setchenow salinity dependence \cite{weiss1974carbon},
 \begin{equation}
 \begin{aligned}
-K0_{CO2} = exp(- 60.2409 + 93.4517(100/T_K)  + 23.3585*ln(T_K/100)+ \\
-S(0.023517 - 0.023656(T_K/100) + 0.0047036(T_K/100)^2))
+K0_{CO2} = e^{(- 60.2409 + 93.4517\frac{100}{T_K}  + 23.3585*log(\frac{T_K}{100})+ 
+S(0.023517 - 0.023656\frac{T_K}{100} + 0.0047036(\frac{T_K}{100})^2))}
 \end{aligned}
 \end{equation}
 where T$_K$ is the temperature (K) and S is salinity (ppt).
@@ -284,8 +284,8 @@ O_{2H}=K0_{O2}*fO2*1.0220*1e-6
 where fO2 (atm) is the fugacity or approximately the partial pressure of O$_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}, and K0$_{O2}$ (mol/kg$_{soln}$/atm) is the solubility of oxygen in seawater with an adjusted salinity dependence \cite{battino1983solubility},
 \begin{equation}
 \begin{aligned}
-K0_{O2} =  (exp(-1282.8704 + 36619.96/T_K + 223.1396*log(T_K) -0.354707*T_K \\
-+ S*(5.957e-3 -3.7353/T_K) + 3.68e-6*S^2))/0.2094e-6
+K0_{O2} =  \frac{e^{(-1282.8704 + \frac{36619.96}{T_K} + 223.1396 log(T_K) -0.354707 T_K 
++ S(5.957e-3 -\frac{3.7353}{T_K}) + 3.68e-6 S^2)}}{0.2094e-6}
 \end{aligned}
 \end{equation}
 where T$_K$ is the temperature (K) and S is salinity (ppt).
