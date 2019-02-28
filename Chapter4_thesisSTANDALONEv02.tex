@@ -133,9 +133,107 @@ Ideally CO2SYS \cite{lewis1998program} would have been used to calculate the car
 CO2SYS is a program developed for CO$_2$ system calculations (CO2SYS) that calculates and returns a detailed state of the carbonate system of oceanographic water samples in seawater and freshwater \cite{lewis1998program}.
 Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure). 
 
-To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
+To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
-considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
+considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
+
+
+\subsubsection{Carbon chemistry iterative solution}
+
+Total Sulfur:
+\begin{align*}
+TS     	&= \frac{0.14}{96.062} * \frac{S}{1.8065} \nonumber \\
+IS     	&= 19.924 \frac{S}{(1000 - 1.005 S)} \nonumber \\
+KS_{int} 	&= -\frac{4276.1}{T_K} + 141.328 - 23.093 log(T_K) + (-\frac{13856.0}{T_K} + 324.57 \nonumber\\ 			 
+& - 47.986 log(T_K)) \sqrt{IS} + ( \frac{35474}{T_K} - 771.54  + 114.723 log(T_K)) IS \nonumber \\
+& - \frac{2698}{T_K} IS^{1.5} + \frac{1776}{T_K} IS^2 \nonumber \\
+KS     	&=  (1 - 0.001005 S)e^{(KS_{int})} \nonumber \\
+\end{align*}
+
+Fluorine:
+\begin{align*}
+TF       	&= \frac{\frac{0.000067 S}{18.9984}}{1.80655} \nonumber \\
+KF       	&= e^{(-(-\frac{874.0}{T_K} - 0.111 \sqrt{S} + 9.68))} \nonumber \\
+SWS_{2_T}  	&= \frac{(1 + \frac{TS}{KS})}{(1 + \frac{TS}{KS} + \frac{TF}{KF})} \nonumber \\
+Free_{2_T} 	&= 1 + \frac{TS}{KS} \nonumber \\
+\end{align*}
+
+H2O dissoc:
+\begin{align*}
+KW 		&= e^{(148.9802 - \frac{13847.26}{T_K}  - 23.6521 log(T_K) 
++ (\frac{118.67}{T_K} - 5.977 + 1.0495 log(T_K)) \sqrt{S} - 0.01615 S)} \nonumber \\
+\text{Boron:} \nonumber \\
+KB 		&= exp(\frac{(-8966.90 - 2890.53 \sqrt{S} - 77.942 S + 1.728 S \sqrt{S} - 0.0996 S^2)}{T_K} \\
+&+ 148.0248 + 137.1942 \sqrt{S} + 1.62142 S \\
+&- (24.4344 + 25.085 \sqrt{S} + 0.2474 S) log(T_K) + 0.053105 T_K \sqrt{S}) \nonumber \\
+TB 		&= 0.0004326 \frac{S}{35} \nonumber \\
+\end{align*}
+
+Choice of dissociation constants $K_1$ and $K_2$ were Mehrbach (refit BY DICKSON AND MILLERO) with 1.23$K_1$ and 0.53$K_2$ measured experiment specific adjustments:
+\begin{align}
+K_1 		&= 10^{(-(\frac{3633.86}{T_K} - 61.2172 + 9.6777 log(T_K) - 0.011555 S + 0.0001152 S^2))}*1.23 \\
+K_2 		&= 10^{(-(\frac{471.8}{T_K} + 25.9290 - 3.16967 log(T_K) - 0.01781 S + 0.0001122 S^2))}*0.53 	
+\end{align}
+%[Choice of H2CO3 and HCO3- dissociation constants $K_1$ and $K_2$ was Mehrbach (refit BY DICKSON AND MILLERO) [BM: After the iterative approach is finalised, the $K_1$ and $K_2$ constants are adjusted based on measurements taken during the experiment, $K_1$*1.23 and $K_2$*0.53 measured during experiment] temperature: 2-35,  salinity: 20-40, Seawater scale, Artificial seawater.]
+
+
+Approximating equation for the starting value of $pH$: 
+\begin{align}
+pH_{0} 	&= 12.26 -0.0030605 DIC -0.043752 T -0.013625 S+ 0.00011315 TA \nonumber \\
+&+ 1.3463e-5 DIC*T + 5.2215e-7 DIC*TA  \label{pH_approx_eq}	
+\end{align}
+
+Newton-Raphson iterations: 
+\begin{align}
+h_{n} 			&=  10^{-pH_{n}}\label{newton_raph_iterations1}	 \\
+h_{n_{free}}	&=  \frac{h_n}{Free_{2_T}}	 \\
+f_n				&= (  DIC*1e-6*\frac{K_1 h_n + 2 K_1 K_2}{h_n^2 + K_1 h_n + K_1 K_2}  \nonumber \\
+&  - h_{n_{free}} + \frac{KW}{h_n} - TA*1e-6 + \frac{TB}{1+\frac{h_n}{KB}} )*1e6  \\
+df_n 			&= (  DIC*1e-6*\frac{K_1 + 2 K_1 K_2}{h_n^2 + K_1 h_n + K_1 K_2}  \nonumber\\
+&  -DIC*1e-6*\frac{(K_1 h_n + 2 K_1 K_2)}{(h_n^2 + K_1 h_n + K_1 K_2)^2}(2h_n + K_1) \nonumber\\
+&  -TB \frac{1}{(1+ \frac{h_n}{KB})^2} / KB   \nonumber \\
+&  -\frac{KW}{h_n^2} - \frac{1}{Free_{2_T}} )*1e6  * (-log(10)*10^{-pH}) \\
+pH_{n+1}		&= pH_n - \frac{f_n}{df_n}  \\
+H_{n+1} 		&= 10^{-pH_{n+1}}  \\
+CO2_{n+1}  		&= \frac{H_{n+1}^2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
+HCO3_{n+1} 		&= \frac{H_{n+1} K_1 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}  \\
+CO3_{n+1}  		&= \frac{K_1 K_2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}\label{newton_raph_iterations_end} 
+\end{align}
+
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_states}}
+	\caption[.]{Iterative vs exact solution for state variables $O_2$, $DIC$, and $TA$.}
+	\label{fig:iterative_states}
+\end{figure}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_carbon}}
+	\caption[.]{Iterative vs exact solution for carbon chemistry $CO_2$, $HCO_3$, $CO_3$, and $pH$.}
+	\label{fig:iterative_carbon}
+\end{figure}
+
+
+\begin{table}
+	\begin{tabular}{|c|c|c|c| c | c|} 
+		\hline
+		\bfseries{Variable} & \bfseries{Iter. 1} & \bfseries{Iter. 2} & \bfseries{Iter. 3}  &  \bfseries{Iter. 4} & \bfseries{Iter. 5} \\ \hline
+		$O_2$		&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
+		$DIC$		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
+		$TA$		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
+		$pH$		& 0.036092734	&0.002355758	&1.41E-05		&6.93E-06		&6.93E-06 		\\
+		$CO2$		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
+		$HCO3$		& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
+		$CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
+		\hline
+	\end{tabular}
+	\caption{RMSE for 5 iterations of the Newton-raphson carbon chemistry iterative solution.}
+	\label{table:rmse_iterative}
+\end{table}
+
 
 
 
@@ -154,7 +252,7 @@ considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial startin
 
 
 
-
+\FloatBarrier
 \subsection{Process model: Gas transfer equilibrium concentrations for O$_2$ and CO$_2$}
 
 %Weiss 1970 (O2) and 1974 (CO2) 
@@ -415,110 +513,8 @@ Decide whether the parameters vary in time or not.
 \section{Results}
 
 
-\subsection{Carbon chemistry iterative solution}
 
-Choice of H2CO3 and HCO3- dissociation constants K1 and K2 was Mehrbach (refit BY DICKSON AND MILLERO) [BM: After the iterative approach is finalised, the K1 and K2 constants are adjusted based on measurements taken during the experiment, K1*1.23 and K2*0.53 measured during experiment] temperature: 2-35,  salinity: 20-40, Seawater scale, Artificial seawater.
-
-
-
-
-Total Sulfur
-\begin{align*}
- TS     	&= \frac{0.14}{96.062}*\frac{S}{1.8065} \nonumber \\
- IS     	&= 19.924*\frac{S}{(1000.0 - 1.005*S)} \nonumber \\
- KS_{int} 	&= -\frac{4276.1}{T_K} + 141.328 - 23.093*log(T_K) + (-\frac{13856.0}{T_K} + 324.57 \nonumber\\ 			 
- 			& - 47.986*log(T_K))*\sqrt{IS} + ( \frac{35474}{T_K} - 771.54  + 114.723*log(T_K))*IS \nonumber \\
- 			& - \frac{2698}{T_K}*IS^{1.5} + \frac{1776}{T_K}*IS^2 \nonumber \\
- KS     	&= exp(KS_{int})*(1 - 0.001005*S) \nonumber \\
-\end{align*}
-
-Fluorine
-\begin{align*}
-TF       	&= 0.000067*S/18.9984/1.80655 \nonumber \\
-KF       	&= exp(-(-\frac{874.0}{T_K} - 0.111*\sqrt{S} + 9.68)) \nonumber \\
-SWS_{2_T}  	&= \frac{(1 + \frac{TS}{KS})}{(1 + \frac{TS}{KS} + \frac{TF}{KF})} \nonumber \\
-Free_{2_T} 	&= 1 + \frac{TS}{KS} \nonumber \\
-\end{align*}
-
-
-\begin{align*}
-\text{H2O dissoc} \nonumber \\
-KW 		&= exp(148.9802 - \frac{13847.26}{T_K}  - 23.6521*log(T_K) \nonumber \\
-		&+ (\frac{118.67}{T_K} - 5.977 + 1.0495*log(T_K))*\sqrt{S} - 0.01615*S) \nonumber \\
-\text{Boron} \nonumber \\
-KB 		&= exp((-8966.90 - 2890.53*\sqrt{S} - 77.942*S \nonumber \\
-		&+ 1.728*S*\sqrt{S} - 0.0996*S^2)/T_K + 148.0248 \nonumber \\
-		& + 137.1942*\sqrt{S} + 1.62142*S \nonumber \\
-		&- (24.4344 + 25.085*\sqrt{S} + 0.2474*S)*log(T_K)  \nonumber \\ 
-		&+ 0.053105*\sqrt{S}*T_K) \nonumber \\
-TB 		&= 0.0004326*\frac{S}{35} \nonumber \\
-\text{Carbon eq constants} \nonumber \\
-K1 		&= 10^{(-(\frac{3633.86}{T_K} - 61.2172 + 9.6777 *log(T_K) - 0.011555*S + 0.0001152*S^2))}*1.23	\nonumber \\
-K2 		&= 10^{(-(\frac{471.8}{T_K} + 25.9290 - 3.16967*log(T_K) - 0.01781*S + 0.0001122*S^2))}*0.53 \nonumber \\	
-\end{align*}
-1.23 and 0.53 were experiment specific and measured 
-
-
-Initial guess at the pH 
-\begin{align*}
-pH_{init} 	&= 12.26 -0.0030605*DIC -0.043752*T -0.013625*S+ 0.00011315*TA \nonumber \\
-&+ 1.3463e-5*DIC*T + 5.2215e-7*DIC*TA \nonumber \\
-\end{align*}
-
-Iterations:
-
-For 1 to n iterations:
-\begin{align*}
-h 			&=  10^{-pH_{init}}	\nonumber \\
-h_{free} 	&=  \frac{h}{Free_{2_T}}	 \nonumber \\
-f0 			&= (  DIC*1e-6*\frac{K1*h+2*K1*K2}{h*h+K1*h+K1*K2}    \nonumber\\
-			&  - h_{free} + \frac{KW}{h} - Alk*1e-6 + \frac{TB}{1+\frac{h}{KB}} )*1e6 \nonumber  \\
-df0 		&= (  DIC*1e-6*\frac{K1 +2*K1*K2}{h^2+K1*h+K1*K2}  \nonumber\\
-			&  -DIC*1e-6*\frac{(K1*h+2*K1*K2)}{(h^2+K1*h+K1*K2)^2}*(2*h+K1)  \nonumber\\
-			&  -TB *\frac{1}{(1+ \frac{h}{KB})^2} / KB   \nonumber \\
-			&  -\frac{KW}{h^2} - \frac{1}{Free_{2_T}} )*1e6  * (-log(10)*10^{-pH}) \nonumber \\
-pH 			&= pH - \frac{f0}{df0} \nonumber \\
-H 			&= 10^{-pH} \nonumber \\
-denom 		&= H^2+K1*H+K1*K2 \nonumber  \\
-CO2  		&= \frac{DIC*H^2}{denom} \nonumber \\
-HCO3 		&= \frac{DIC*H *K1}{denom} \nonumber \\
-CO3  		&= \frac{DIC*K1*K2}{denom}      \nonumber \\                         
-\end{align*}
-
-
-
-
-\begin{figure}
-	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_states}}
-	\caption[.]{Iterative vs exact solution for state variables $O_2$, $DIC$, and $TA$.}
-	\label{fig:iterative_states}
-\end{figure}
-
-
-\begin{figure}
-	\centerline{\includegraphics[width=0.5\textwidth]{images_microalgae/plots/iterative_carbon}}
-	\caption[.]{Iterative vs exact solution for carbon chemistry $CO_2$, $HCO_3$, $CO_3$, and $pH$.}
-	\label{fig:iterative_carbon}
-\end{figure}
-
-\begin{table}
-\begin{tabular}{|c|c|c|c| c | c|} 
-\hline
-\bfseries{Variable} & \bfseries{Iter. 1} & \bfseries{Iter. 2} & \bfseries{Iter. 3}  &  \bfseries{Iter. 4} & \bfseries{Iter. 5} \\ \hline
-$O_2$		&  0.308389964	&0.016044284	&4.18E-05		&6.89E-05		&7.59E-05 		\\
-$DIC$		& 16.78775711	&0.958511825	&0.005229318	&0.002305054	&0.002333411 	\\
-$TA$		&  2.607767674	&0.160897272	&0.000688102	&0.001257725	&0.001218981 	\\
-$pH$		& 0.036092734	&0.002355758	&1.41E-05		&6.93E-06		&6.93E-06 		\\
-$CO2$		& 2.109401968	&0.145719349	&0.001222812	&0.000866728	&0.000866727 	\\
-$HCO3$		& 19.81869214	&1.21021115		&0.008016765	&0.001025002	&0.001025139 	\\
-$CO3$		& 20.89660704	&1.307061652	&0.00867642		&0.001102278	&0.001102434 	\\
-\hline
-\end{tabular}
-\caption{RMSE for 5 iterations of the Newton-raphson carbon chemistry iterative solution.}
-\label{table:rmse_iterative}
-\end{table}
-
-
+%% for reference
 %Approximating equations in place of CO2SYS:
 %
 %\begin{equation}
