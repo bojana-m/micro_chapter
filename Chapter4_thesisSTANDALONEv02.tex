@@ -311,13 +311,15 @@ where $Q^{air}$ is the gas state (1= on, 0= off), $kLa_{O_2}^{air}$ and $kLa_{CO
 
 Net photosynthesis
 \begin{align}
-\frac{\partial DIC}{dt} &=&  -P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  + R_1 
+\frac{\partial DIC}{dt} &=&  -(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  - R_1) 
 \\
 \frac{\partial O_2}{dt}	&=&  \frac{1}{(RQ_d I + RQ_n(1-I))}(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  - R_1)
 \\
 \frac{\partial TA}{\partial t}  &=&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-})
 \\
-\end{align}
+\frac{\partial C_p}{\partial t} &=& (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1) 
+\\\nonumber
+\end{align} 
 Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
 \begin{displaymath}
 P_1(t+\Delta t) = P_1(t) + r_P
@@ -350,67 +352,66 @@ $ \frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2}) $
 
 $ \frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA) $
 
+$ \frac{Q^M}{V}(\phantom{CTA^{M}} - \phantom{IC}C_p) $
 
 
 
-\subsection{Process model: Ordinary differential equations}
+\subsection{Process model: Ordinary differential equations}\label{sec:micro_process_model}
 
 A summary of the ode's that make up the process model:
-%\begin{equation}
 \begin{align}
 \text{Rate} & & \text{flux into cells}            &            &\text{gas transfer}   &     & \text{dilution} \nonumber                              \\
 \frac{\partial DIC}{\partial t}&=&                      - (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(DIC^{M} - DIC)       \nonumber \\
 %                                           &  &                                   &      &+\hat Q^{co2}kLa_{ CO_2}^{co2}(CO_{2}^{co2} - CO_{2})    \\
 \frac{\partial O_2}{\partial t}&=& \frac{(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)}{(RQ_d I + RQ_n(1-I))}  &      &+\hat Q^{air}kLa_{\phantom{C}O_2}^{air}(\phantom{C}O_{2}^{air} - \phantom{I}O_{2}) && +\frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2})     \nonumber   \\
  %                                          &  &                                   &      &+\hat Q^{co2}kLa_{\phantom{C}O_2}^{co2}(\phantom{C}O_{2}^{co2} - \phantom{C}O_{2})    \\
-\frac{\partial TA}{\partial t} & =&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} \phantom{ + R_1})& & & & +\frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{I}TA)
+\frac{\partial TA}{\partial t} & =&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} \phantom{ + R_1})& & & & +\frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{I}TA) \nonumber\\
+\frac{\partial C_p}{\partial t} & =& (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)&  & & & +\frac{Q^M}{V}(\phantom{CTA^{M}} - \phantom{II}C_p) 
 \end{align}
-%\end{equation}
 
 
-%\begin{table}[ht]
-%\caption{Multi-row table}
-%\begin{center}
-%\begin{tabular}{|c|c|c|c|c|}
+
 \begin{longtable}{|c|c|l|c|l|}
 	\hline 
 	& Symbol & Description  & Prior / Value & Unit \\
     \hline
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{State variable initial conditions }}
-    & $DIC^0$ & Dissolved inorganic carbon &  & $\mu$M L$^{-1}$ \\
-    & $O_2^0$ & Oxygen &  & $\mu$M L$^{-1}$ \\
-    & TA$^0$  & Total alkalinity & & $\mu$M L$^{-1}$ \\
-    & P$^0$  & Rate of photosynthesis & & $\mu$M L$^{-1}$ day$^{-1}$\\
-    & R$^0$  & Rate of respiration & & $\mu$M L$^{-1}$ day$^{-1}$\\
-    & pH$^0$ & -  & & log$_{10}$(-mol/L H+)  \\
-    & $CO_2$$^0$ & Carbon dioxide  & & $\mu$M L$^{-1}$ \\
-    & $HCO_3^-$$^0$ & Bicarbonate & & $\mu$M L$^{-1}$  \\
-    & $CO_3^{2-}$$^0$ & Carbonate &  & $\mu$M L$^{-1}$ \\
+    \multirow{4}{*}{\rotatebox[origin=c]{90}{Initial conditions}}
+    & $DIC^0$ & Dissolved inorganic carbon & Log$\mathcal{N}$(log(1300), 0.2) & $\mu$M L$^{-1}$ \\
+    & $O_2^0$ & Oxygen & Log$\mathcal{N}$(log(225), 0.2) & $\mu$M L$^{-1}$ \\
+    & TA$^0$  & Total alkalinity & Log$\mathcal{N}$(log(1750), 0.1) & $\mu$M L$^{-1}$ \\
+    & $C_p^0$  &  & Log$\mathcal{N}$(log(300), 0.2) & $\mu$M L$^{-1}$ \\
+%    & $P^0$  & Rate of photosynthesis & & $\mu$M L$^{-1}$ day$^{-1}$\\
+%    & $R^0$  & Rate of respiration & & $\mu$M L$^{-1}$ day$^{-1}$\\
+    & $pH^0$ & -  & Log$\mathcal{N}$(log(8.5), 0.2) & log$_{10}$(-mol/L H+)  \\
+    & $CO_2$$^0$ & Carbon dioxide  & Log$\mathcal{N}$(log(5), 0.4) & $\mu$M L$^{-1}$ \\
+    & $HCO_3^-$$^0$ & Bicarbonate & Log$\mathcal{N}$(log(1500), 0.3) & $\mu$M L$^{-1}$  \\
+    & $CO_3^{2-}$$^0$ & Carbonate & Log$\mathcal{N}$(log(100), 0.4) & $\mu$M L$^{-1}$ \\
     \hline
 	\multirow{4}{*}{\rotatebox[origin=c]{90}{Flux into cells}}
-	& $ P_1 $ & Maximum photosynthesis rate  &  & $\mu$M L$^{-1}$ hour$^{-1}$ \\
-	& $ R_1 $ & Respiration rate &  & $\mu$M L$^{-1}$ hour$^{-1}$ \\ 
-	& $ K_m $ & Carbon restriction &  & $\mu$M L$^{-1}$ \\
-	& $ RQ_d $ & Daytime respiratory quotient &  & - \\
-	& $ RQ_n $ & Night respiratory quotient &  & - \\
-	& $ R_R $ & Redfield ratio &  & - \\	
+	& $ P_1 $ & Maximum photosynthesis rate  & * & $\mu$M L$^{-1}$ hour$^{-1}$ \\
+	& $ R_1 $ & Respiration rate & * & $\mu$M L$^{-1}$ hour$^{-1}$ \\ 
+	& $ K_m $ & Carbon restriction & * & $\mu$M L$^{-1}$ \\
+	& $ RQ_d $ & Daytime respiratory quotient & * & - \\
+	& $ RQ_n $ & Night respiratory quotient & * & - \\
+	& $ R_R $ & Redfield ratio & * & - \\
+	& $ I $ & Light indicator & forcing (0/1) & - \\	
     \hline
     \multirow{4}{*}{\rotatebox[origin=c]{90}{Gas transfer terms }}
-    & $ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1 & - \\
-    & $x_{CO_2}^{air} $ & mole fraction of CO$_2$ atmosphere& 400 & ppm \\ 
+    & $ \hat Q ^{air} $ & Indicator for flow in air line  & forcing (0/1) & - \\
+    & $x_{CO_2}^{air} $ & Mole fraction of CO$_2$ atmosphere & 400 & ppm \\ 
     & $CO_{2H}$  & Equilibrium CO$_2$ concentration  & Eq. \ref{eq:CO2H_eq} & $\mu$M L$^{-1}$  \\
-    & $CO_{2}^{air}$ & sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$ & \\
+    & $CO_{2}^{air}$ & Sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$ & \\
     & $kLa_{ CO_2}^{air}$ & Mass transfer coefficient for CO$_2$ & 0.893$kLa_{\phantom{C}O_2}^{air}$  & day$^{-1}$ \\
     
-    & $x_{O_2}^{air} $ & mole fraction of O$_2$ atmosphere& 0.2094 & atm \\ 
+    & $x_{O_2}^{air} $ & Mole fraction of O$_2$ atmosphere& 0.2094 & atm \\ 
     & $\phantom{C}O_{2H}$  & Equilibrium O$_2$ concentration  & Eq. \ref{eq:O2H_eq} & $\mu$M L$^{-1}$  \\
-	& $\phantom{C}O_{2}^{air}$ & sat O$_2$ conc with atmosphere &   $x_{O_2}^{air} O_{2H}$ & \\
+	& $\phantom{C}O_{2}^{air}$ & Sat O$_2$ conc with atmosphere &   $x_{O_2}^{air} O_{2H}$ & \\
     & $\tau$ & half-life of $kLa_{\phantom{C}O_2}^{air}$  & range(2-20) & min$^{-1}$\\
     & $kLa_{\phantom{C}O_2}^{air}$ & Mass transfer coefficient for O$_2$ & $\ln(2) * 24*60/\tau$ & day$^{-1}$\\
    
     \hline
         \multirow{4}{*}{\rotatebox[origin=c]{90}{Dilution terms }}
-    &$  Q ^{M} $ & rate  &  & ml day$^{-1}$ \\
+    &$  Q ^{M} $ & Dilution rate  & forcing & ml day$^{-1}$ \\
     &$  V $ & Volume of the reactor  & 500 & ml \\
     &$  DIC ^{M} $ & Media dissolved inorganic carbon  & 1724.20 & $\mu$M L$^{-1}$ \\ 
     &$	\phantom{CC}O_2^{M}$ & Media oxygen concentration & 226.65 & $\mu$M L$^{-1}$ \\
@@ -431,57 +432,65 @@ A summary of the ode's that make up the process model:
 %    & $kLa_{ CO_2}^{CO2}$ & mass transfer coefficient & 0.893$kLa_{\phantom{C}O_2}^{CO2}$  & day$^{-1}$ \\
 %    &$  CO_{2} ^{CO2} $ &   &  &  \\   
 %    \hline
+	\caption{State variable, parameter and forcing definitions with units, and their assignments: either fixed values, priors on initial condition or priors on parameters (*) defined later in Section \ref{sec:micro_parameter_model}.}
 \end{longtable}  
     
+
+
+
+%\clearpage
+%\begin{tabular}{l l  | l}
+%	 \hline 
+%	Symbol & Variable & Units  \\ \hline
+%	DIC &  Dissolved inorganic carbon concentration & $\mu$mol/L  \\
+%	O$_2$ & Oxygen  &  $\mu$mol/L \\
+%	pH & -  & log$_{10}$(-mol/L H+)  \\
+%	CO$_2$ & Carbon dioxide  & $\mu$mol/L \\
+%	HCO$_3^-$ & Bicarbonate & $\mu$mol/L  \\
+%	CO$_3^{2-}$ & Carbonate  & $\mu$mol/L \\
+%	kLA$_{O2}$  & Mass transfer coefficient for O$_2$ &  d$^{-1}$  \\
+%	
+%	CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$mols/L  \\
+%	
+%	K0$_{O2}$ &  Solubility of gas & mol/kg$_{soln}$/atm  \\
+%	K0$_{CO2}$ & Solubility of gas & mol/kg$_{soln}$/atm   \\
+%	TA  & Total alkalinity & $\mu$mols/L  \\
+%	S  & Salinity &  ppt  \\
+%	fCO2  & Fugacity/CO$_2$ partial pressure &  atm  \\
+%	fO2  & Fugacity/O$_2$ partial pressure &  atm \\
+%	
+%	K$_m$ & Carbon restriction & $\mu$mols/L \\
+%	
+%	P & Photosynthesis rate & $\mu$mols/L/day \\
+%	R & Respiration rate & $\mu$mols/L/day \\
+%	R$_R$ & Redfield ratio & - \\	
+%	R$_Q$ & Respiratory quotient & - \\
 %\end{tabular}
-%\end{center}
-%\label{tab:multicol}
-%\end{table}
+%\captionof{table}{Table of variables and parameters.}
+
+%\begin{tabular}{c c  | c}
+%	 \hline
+%	 Symbol & Variable & Units  \\ \hline
+%	I &  Light Intensity  &  normalised to 0/1   \\
+%	T & Temperature & $\circ$ C  \\
+%	T$_K$ & Temperature &  K  \\
+%	$\xi$ & gasflow &  on/off (1,0)  \\
+%	
+%\end{tabular}
+%\captionof{table}{Table of Forcings}
 
 
-\clearpage
-\begin{tabular}{l l  | l}
-	 \hline 
-	Symbol & Variable & Units  \\ \hline
-	DIC &  Dissolved inorganic carbon concentration & $\mu$mol/L  \\
-	O$_2$ & Oxygen  &  $\mu$mol/L \\
-	pH & -  & log$_{10}$(-mol/L H+)  \\
-	CO$_2$ & Carbon dioxide  & $\mu$mol/L \\
-	HCO$_3^-$ & Bicarbonate & $\mu$mol/L  \\
-	CO$_3^{2-}$ & Carbonate  & $\mu$mol/L \\
-	kLA$_{O2}$  & Mass transfer coefficient for O$_2$ &  d$^{-1}$  \\
-	
-	CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$mols/L  \\
-	
-	K0$_{O2}$ &  Solubility of gas & mol/kg$_{soln}$/atm  \\
-	K0$_{CO2}$ & Solubility of gas & mol/kg$_{soln}$/atm   \\
-	TA  & Total alkalinity & $\mu$mols/L  \\
-	S  & Salinity &  ppt  \\
-	fCO2  & Fugacity/CO$_2$ partial pressure &  atm  \\
-	fO2  & Fugacity/O$_2$ partial pressure &  atm \\
-	
-	K$_m$ & Carbon restriction & $\mu$mols/L \\
-	
-	P & Photosynthesis rate & $\mu$mols/L/day \\
-	R & Respiration rate & $\mu$mols/L/day \\
-	R$_R$ & Redfield ratio & - \\	
-	R$_Q$ & Respiratory quotient & - \\
-\end{tabular}
-\captionof{table}{Table of variables and parameters.}
+\subsection{Design and setup of data assimilation model with both simulated and experimental data}
 
-\begin{tabular}{c c  | c}
-	 \hline
-	 Symbol & Variable & Units  \\ \hline
-	I &  Light Intensity  &  normalised to 0/1   \\
-	T & Temperature & $\circ$ C  \\
-	T$_K$ & Temperature &  K  \\
-	$\xi$ & gasflow &  on/off (1,0)  \\
-	
-\end{tabular}
-\captionof{table}{Table of Forcings}
+A simulated dataset was created by running the process model described in Section \ref{sec:micro_process_model} with a fixed set of parameters ($P_1$ = 200, $R_1$ = 30, $kLA_{O_2}^{air}$ = 200, $K_m$ = 150, $RQ_d$ = 0.85, $RQ_n$ = 0.95, $R_R$ = 0.075) and initial conditions ($O_2^0$ = 225, $DIC^0$ = 1250, $TA^0$ = 1750). 
 
+The first set of results will assimilate the simulated observations and attempt to recover the true value parameters. 
 
-\subsection{Parameter Model: Priors}
+[Chris: noise on simulated dataset? sigmas? can you double check what I've written here is right?]
+
+\subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
+** include simulated data priors, and real data priors.
+
 Decide whether the parameters vary in time or not.
 
 
@@ -509,7 +518,7 @@ Decide whether the parameters vary in time or not.
 
 \FloatBarrier
 
-\section{Results}
+\section{Results and Discussion}
 
 
 
@@ -566,8 +575,66 @@ Decide whether the parameters vary in time or not.
 %\end{aligned}
 %\end{equation}
 
+
 \FloatBarrier
-\subsection{Posteriors}
+\subsection{Posteriors with simulated data}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/posterior_plots_with_fake_data/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
+	\label{fig:pos_sim_O2_pH}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/posterior_plots_with_fake_data/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
+	\label{fig:pos_sim_DIC_TA_Cp}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/posterior_plots_with_fake_data/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
+	\label{fig:pos_sim_carbon}
+\end{figure}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/posterior_plots_with_fake_data/model_parameters}}
+	\caption[.]{Priors (pink), posteriors (purple) and true values (green) for model parameters.}
+	\label{fig:pos_sim_model_parameters}
+\end{figure}
+
+
+\begin{longtable}{|c|c|c|c|} 
+		\hline
+		\bfseries{Parameter}  & \bfseries{Quantiles (25\%, 75\%)}  & \bfseries{Quantiles (5\%, 95\%)} &  \bfseries{True value} \\ \hline
+		$P_1$ 				& (237.2167, 302.0565) 	& (200.8971, 365.1751) 	&  200  \\ 
+		$R_1$ 				& (17.5370, 32.3501) 	& (10.6537, 45.3096)	& 	30 \\ 
+		$kLA_{O_2}^{air}$ 	& (177.1383, 222.9641)  & (148.2838, 267.5934)  &  200 \\
+		$K_m$ 				& (182.6643, 362.6714) 	& (118.4125, 643.8518) 	&  150 \\ 
+		$R_R$ 				& (0.0504, 0.1041) 		& (0.0196, 0.1458) 		& 0.075 \\
+		$RQ_d$ 				& (0.7529, 0.8718) 		& (0.6894, 0.9666) 		& 0.85 \\	
+		$RQ_n$ 				& (0.7469, 0.9338) 		& (0.6400, 0.9920) 		& 0.95 \\	
+		\hline
+		\caption[.]{True values for parameters used to create the simulated observations, and posterior (25\%, 75\%), (5\%, 95\%) quantiles for parameters after assimilating observations.}	
+		\label{table:micro_parameters_sim}
+\end{longtable}
+
+After 50,000 samples the true values of parameters $R_1$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P_1$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P_1$, $R_1$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
+
+Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
+Acceptance rate was XX.
+
+
+Observed state variables $O_2$, $DIC$, $TA$, and observed $pH$ posteriors were in excellent agreement with observations, with all observations fitting within the 95\% credible interval posteriors (Figure \ref{fig:pos_sim_O2_pH}, Figure \ref{fig:pos_sim_DIC_TA_Cp}).
+
+Unobserved state variable $C_p$ .. (Figure \ref{fig:pos_sim_DIC_TA_Cp}).
+
+Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_sim_carbon}).
+
+\FloatBarrier
+\subsection{Posteriors with experimental data}
 
 [BM: Talk about the tuning of the observation error priors $\sigma_{O_2}$ etc]
 
@@ -619,6 +686,7 @@ Decide whether the parameters vary in time or not.
 	\caption[.]{Priors, posteriors and traces for obs. error parameters.}
 	\label{fig:pos_parameters_obserror}
 \end{figure}
+
 
 
 
@@ -914,6 +982,18 @@ alk_obs ~ log_normal(log(alk), sigma_DIC)
 	\label{fig:micro_DAG}
 \end{sidewaysfigure}
 
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/posterior_plots_with_fake_data/loglikelihood}}
+	\caption[.]{Log-prior and log-likelihood for the simulated data experiment.}
+	\label{fig:micro_sim_loglikelihood}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/posterior_plots_with_fake_data/model_parameters_traces}}
+	\caption[.]{Parameter posterior traces for the simulated data experiment.}
+	\label{fig:micro_sim_model_parameters_traces}
+\end{figure}
 
 \bibliography{seagrassbib}{}
 \bibliographystyle{plain}
