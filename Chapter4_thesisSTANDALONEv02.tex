@@ -76,16 +76,18 @@
 \linespacing{1.7}
 
 \setcounter{chapter}{3}
-\chapter{A data assimilating state-space model for algal growth under controlled conditions within a photobioreactor}\label{ch:Intro}
+\chapter{A data assimilating state-space model for algal growth under controlled conditions within a photo-bioreactor}\label{ch:Intro}
 
 
 \section{Introduction}\label{sec:micro_intro} 
 
-Microalgae are tiny organisms.. 
+The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photo‐bioreactors.
+
+Carbon and light availability are two of the most common limiting factors of biomass productivity \cite{posten2009design}.
 
 
 
-[BM for ref: At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes. The linear increase in DO caused by these artefacts were used to calculate net photosynthesis. (reference Tamburic 2015)]
+%[BM for ref: At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes. The linear increase in DO caused by these artefacts were used to calculate net photosynthesis. (reference Tamburic 2015)]
 
 
 
@@ -93,14 +95,14 @@ Microalgae are tiny organisms..
 
 \section{Methods}
 
-\subsection{Data Model: Photobioreactor setup, experimental design and data collection methods}
+\subsection{Data Model: Photo-bioreactor setup, experimental design and data collection methods}
 
 All data collection methods for this chapter were carried out by Peter Wood as part of a collection of PhD experiments (Peter Wood 2019 UTS PhD).
 
 Microalgal culture \emph{Nannochloropsis oceanica} (Droop) Green (strain CS-179) obtained from the Australian National Algae Culture Collection was cultured in 200$\mskip3mu$mL conical flasks; maintained in an incubator (Labec Pty Ltd) at 20$^{\circ}$C, under an irradiance of
 50$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ of cool-white fluorescent light at a 12 hour light/12 hour dark cycle. Stock cultures were grown in f/2 saltwater medium \cite{guillard1962studies} and diluted 5 days prior to the start of experiments to ensure that \emph{N. oceanica} was in the exponential growth phase and not nutrient deprived. f/2 was sparged prior to stock culture dilutions to maximise carbon and oxygen content.  
 
-\emph{N. oceanica} was cultured in four, 500$\mskip3mu$mL environmental photobioreactors (ePBRs, Phenometrics Inc) with a 10\% v/v inoculation of stock culture. Top-side illumination over a path length of 25$\mskip3mu$cm was provided by a cool-white light LED, whilst temperature was maintained at 27$^{\circ}$C using a Peltier heater-cooler connected to a water jacket. In-built thermocouples, calibrated against external temperature sensors attached to the Firesting module (TeX4; PyroScience GmbH), measured every 5 minutes were used to control the Peltier heater-cooler jacket through a feedback loop to an accuracy of $\pm$ 0.2$^{\circ}$C. pH was also measured in 5 min intervals by in-built pH electrodes (Van London Inc); controlled by periodic CO2 (5\%) injections using valves in the ePBRs. pH was 3-point calibrated using pH buffer solutions at pH 4.00 $\pm$ 0.02, pH 7.00 $\pm$ 0.02 and pH 10.00 $\pm$ 0.02.  PBR mixing was controlled by magnetic stirring bars at 110 rpm. All four ePBRs were aerated with filtered/humidified air through a 1.2$\mskip3mu$mm needle valve (Terumo Co). 
+\emph{N. oceanica} was cultured in four, 500$\mskip3mu$mL environmental photo-bioreactors (ePBRs, Phenometrics Inc) with a 10\% v/v inoculation of stock culture. Top-side illumination over a path length of 25$\mskip3mu$cm was provided by a cool-white light LED, whilst temperature was maintained at 27$^{\circ}$C using a Peltier heater-cooler connected to a water jacket. In-built thermocouples, calibrated against external temperature sensors attached to the Firesting module (TeX4; PyroScience GmbH), measured every 5 minutes were used to control the Peltier heater-cooler jacket through a feedback loop to an accuracy of $\pm$ 0.2$^{\circ}$C. pH was also measured in 5 min intervals by in-built pH electrodes (Van London Inc); controlled by periodic CO2 (5\%) injections using valves in the ePBRs. pH was 3-point calibrated using pH buffer solutions at pH 4.00 $\pm$ 0.02, pH 7.00 $\pm$ 0.02 and pH 10.00 $\pm$ 0.02.  PBR mixing was controlled by magnetic stirring bars at 110 rpm. All four ePBRs were aerated with filtered/humidified air through a 1.2$\mskip3mu$mm needle valve (Terumo Co). 
 
 
 A period of 2 days was allowed for \emph{N. occulata} to acclimate to the ePBRs at an irradiance of 500$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ and a temperature of 27$^{\circ}$C. Following this acclimation period, the PBR was set to the experimental condition of 2,000$\mskip3mu$$\mu$mol$\mskip3mu$photons$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ for another 2 days and a 12 hour light/12 hour dark cycle with a temperature of 27$^{\circ}$C. 
@@ -118,13 +120,13 @@ Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (
 
 Valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
 Dissolved oxygen, pH, dissolved inorganic carbon and total alkalinity observations for 4 days post acclimation were assimilated. 
-While pH observations were calibrated and corrected, it was visible that O$_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the O$_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
+While pH observations were calibrated and corrected, it was visible that $O_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the $O_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
 
 The data model assigned log normally distributed observation errors for each instrument;
-O$_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log(O$_2$), $\sigma_{O_2}$), pH$_{obs}$ $\sim$ Log$\mathcal{N}$(log(pH),  $\sigma_{pH}$), DIC$_{obs}$ $\sim$ Log$\mathcal{N}$(log(DIC), $\sigma_{DIC}$), TA$_{obs}$ $\sim$ Log$\mathcal{N}$(log(TA), $\sigma_{DIC}$), where the standard deviations ($\sigma_{O_2}$, $\sigma_{pH}$, $\sigma_{DIC}$) were unknown parameters to be estimated as part of the assimilating model. Dissolved inorganic carbon and total alkalinity measurements were obtained from the same instrument thus the error is shared between these states. Initial observation error priors started at $\sigma_{O_2}$ $\sim$ Log$\mathcal{N}$(log(0.1), 0.5) and then were adjusted during the PMMH tuning phase. 
+$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$), $pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$), $DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$), $TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$), where the standard deviations ($\sigma_{O_2}$, $\sigma_{pH}$, $\sigma_{DIC}$) were unknown parameters to be estimated as part of the assimilating model. Dissolved inorganic carbon and total alkalinity measurements were obtained from the same instrument thus the error is shared between these states. Initial observation error priors started at $\sigma_{O_2}$ $\sim$ Log$\mathcal{N}$(log(0.1), 0.5) and then were adjusted during the PMMH tuning phase. 
 
 
-[Chris/SW: should I talk about the thinning out of O$_2$ and pH obs?]
+[Chris/SW: should I talk about the thinning out of $O_2$ and pH obs?]
 
 
 \subsection{Process model: Carbon chemistry}
@@ -135,7 +137,7 @@ Using two of the four measurable carbonate system parameters (total alkalinity, 
 
 To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
-considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for pH$_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, DIC: 200-2500, and alkalinity: 1500-3000). A range of initial conditions and parameter values were tested, and each converged with RMSE $<$ 0.01 across $pH$, $HCO_3^-$, $CO_2$, and $CO_3$, $DIC$, $O_2$, $TA$ by the 3rd iteration (Figure \ref{fig:iterative_carbon_and_states} and Table \ref{table:rmse_iterative}).
+considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for $pH_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, $DIC$: 200-2500, and alkalinity: 1500-3000). A range of initial conditions and parameter values were tested, and each converged with RMSE $<$ 0.01 across $pH$, $HCO_3^-$, $CO_2$, and $CO_3$, $DIC$, $O_2$, $TA$ by the 3rd iteration (Figure \ref{fig:iterative_carbon_and_states} and Table \ref{table:rmse_iterative}).
 
 %HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
 
@@ -623,6 +625,7 @@ Decide whether the parameters vary in time or not.
 
 After 50,000 samples the true values of parameters $R_1$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P_1$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P_1$, $R_1$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
 
+
 Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
 Acceptance rate was XX.
 
@@ -700,56 +703,70 @@ Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well
 \FloatBarrier
 \subsection{Posteriors with experimental data}
 
-[BM: Talk about the tuning of the observation error priors $\sigma_{O_2}$ etc]
+40,000 samples run with 1024 particles (40,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was XX.
 
+$P_1$ and $R_1$ are random walks. $RQ_d$ and $RQ_n$ are random walks. State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/O2_pH}}
-	\caption[.]{Posteriors for $O_2$ and $pH$.}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
 	\label{fig:pos_O2_pH}
 \end{figure}
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/DIC_TA}}
-	\caption[.]{Posteriors for $DIC$ and $TA$.}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
 	\label{fig:pos_DIC_TA}
 \end{figure}
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/carbon}}
-	\caption[.]{Posteriors for carbon chem.}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
 	\label{fig:pos_carbon}
 \end{figure}
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/P_and_R}}
-	\caption[.]{Posteriors for photosynthesis and respiration.}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/P_and_R}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$ and respiration $R_1$.}
 	\label{fig:pos_P_R}
 \end{figure}
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots/Cp}}
-	\caption[.]{Posterior for $C_p$.}
-	\label{fig:pos_Cp}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/RQ_d_RQ_n}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_d$ and $RQ_n$.}
+	\label{fig:pos_RQ_d_RQ_n}
 \end{figure}
 
+
+
 \begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots/parameters_model}}
-	\caption[.]{Priors, posteriors and traces for model parameters.}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris/modelparameters1}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
 	\label{fig:pos_parameters_model}
 \end{figure}
 
 \begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots/parameters_model2}}
-	\caption[.]{Priors, posteriors and traces for model parameters.}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris/modelparameters1_trace}}
+	\caption[.]{Traces for model parameters.}
 	\label{fig:pos_parameters_model2}
 \end{figure}
 
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots/parameters_obserror}}
-	\caption[.]{Priors, posteriors and traces for obs. error parameters.}
-	\label{fig:pos_parameters_obserror}
-\end{figure}
+
+
+\begin{longtable}{|c|c|c|} 
+	\hline
+	\bfseries{Parameter}  & \bfseries{Quantiles (25\%, 75\%)}  & \bfseries{Quantiles (5\%, 95\%)} \\ \hline
+	$kLA_{O_2}^{air}$ 	& (139.5979, 170.8102)  & (120.9171, 204.5474)   \\
+	$K_m$ 				& (168.1931, 378.8001) 	& (104.2598, 599.6881) 	 \\ 
+	$R_R$ 				& (0.0815, 0.1512) 		& (0.0284, 0.1844) 		 \\
+	$\sigma_{r_P}$ 		& (0.0178, 0.0202) 		& (0.0159, 0.0222) 		 \\ 
+	$\sigma_{r_R}$ 		& (0.0094, 0.0113) 		& (0.0081, 0.0121)		 \\ 
+	
+	\hline
+	\caption[.]{Posterior (25\%, 75\%), (5\%, 95\%) quantiles for parameters after assimilating observations.}	
+	\label{table:micro_parameters_exp}
+\end{longtable}
+
 
 
 
