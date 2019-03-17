@@ -120,7 +120,7 @@ Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (
 
 Valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
 Dissolved oxygen, pH, dissolved inorganic carbon and total alkalinity observations for 4 days post acclimation were assimilated. 
-While pH observations were calibrated and corrected, it was visible that $O_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. An offset term ($offset_{O_2}$) was added to the $O_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
+While pH observations were calibrated and corrected, it was visible that $O_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. %An offset term ($offset_{O_2}$) was added to the $O_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
 
 The data model assigned log normally distributed observation errors for each instrument;
 $O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$), $pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$), $DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$), $TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$), where the standard deviations ($\sigma_{O_2}$, $\sigma_{pH}$, $\sigma_{DIC}$) were unknown parameters to be estimated as part of the assimilating model. Dissolved inorganic carbon and total alkalinity measurements were obtained from the same instrument thus the error is shared between these states. Initial observation error priors started at $\sigma_{O_2}$ $\sim$ Log$\mathcal{N}$(log(0.1), 0.5) and then were adjusted during the PMMH tuning phase. 
@@ -322,20 +322,7 @@ Net photosynthesis
 \frac{\partial C_p}{\partial t} &=& (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1) 
 \\\nonumber
 \end{align} 
-Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
-\begin{displaymath}
-P_1(t+\Delta t) = P_1(t) + r_P
-\end{displaymath}
-\begin{displaymath}
-R_1(t+\Delta t) = R_1(t) + r_R
-\end{displaymath}
-where \begin{math}
-r_P \sim N(0, \sigma_{r_P})
-\end{math}, \begin{math}
-r_R \sim N(0, \sigma_{r_R})
-\end{math}, and \begin{math}
-\Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. 
+
 
 
 $RQ_d$ and $RQ_n$ are the day and night respiratory quotients, the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
@@ -486,36 +473,13 @@ A summary of the ode's that make up the process model:
 
 A simulated dataset was created by running the process model described in Section \ref{sec:micro_process_model} with a fixed set of parameters ($P_1$ = 200, $R_1$ = 30, $kLA_{O_2}^{air}$ = 200, $K_m$ = 150, $RQ_d$ = 0.85, $RQ_n$ = 0.95, $R_R$ = 0.075) and initial conditions ($O_2^0$ = 225, $DIC^0$ = 1250, $TA^0$ = 1750). 
 
-The first set of results will assimilate the simulated observations and attempt to recover the true value parameters. 
+The first set of results assimilated the simulated observations and attempted to recover the true value parameters. 
 
-[Chris: noise on simulated dataset? sigmas? can you double check what I've written here is right?]
+[Chris: noise on simulated dataset? sigmas?]
 
 \subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
-** include simulated data priors, and real data priors.
+[BM: I've put these in at the beginning of each results section for now and described how each run is different in the \textbf{In this run:} parts, so that they're clear when we're discussing the results. Will move it here after our meeting.]
 
-Decide whether the parameters vary in time or not.
-
-
-
-
-\begin{tabular}{c | c  |  c}
-	Parameter & Prior &  Proposal \\ \hline
-	S  & 34 & * \\
-	fCO2  & 397e-6 &  *  \\
-	fO2  & 0.21 &  *  \\
-	kLA$_{O2}$  & LogNormal(log(200.0), 0.5)  & LogNormal(log(kLA$_{O2}$), 0.5prop$_{std}$) \\
-	K$_m$ &  LogNormal(log(200.0), 0.8)  & LogNormal(log(K$_m$), 0.8prop$_{std}$) \\
-	R$_R$  & Uniform(0.0001, 0.2) &  TrunNormal(R$_R$, 0.2prop$_{std}$, 0.0001, 0.2) \\
-	R$_Q$  & Uniform(0.66, 1) &  TrunNormal(R$_Q$, 0.2prop$_{std}$, 0.66, 1.0)
-	 \\
-	$\sigma_P$ & Normal(0.05, 0.01) & Normal($\sigma_P$, 0.01prop$_{std}$) \\
-	$\sigma_R$ & Normal(0.01, 0.001) & Normal($\sigma_R$, 0.001prop$_{std}$) \\
-	
-%R$_1$ & LogNormal(log(1000.0), 0.3)  & LogNormal(log(R$_1$), 0.3prop$_{std}$) \\	
-%	P$_1$ & 4.7407e-4 $\pm$ & - \\
-\end{tabular}
-\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed. (prop$_{std}$ =0.1)}
-\newpage
 
 
 \FloatBarrier
@@ -579,8 +543,35 @@ Decide whether the parameters vary in time or not.
 
 
 \FloatBarrier
-\subsection{Posteriors with simulated data}
+\subsection{Posteriors with simulated data (photosynthesis and respiration as parameters)}
+% micro_iterative_fake_v2.bi
 
+State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
+
+\textbf{In this run:}\\
+$P_1$, $R_1$, $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ and all treated as parameters constant through time but unknown. The data model assigned log normally distributed observation errors for each instrument;\\
+$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
+$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
+$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
+$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+
+\begin{tabular}{c | c  |  c}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$P_1$  		& Log$\mathcal{N}$(log(250.0), 0.8)  & Log$\mathcal{N}$(log($P_1$), 0.08)   \\
+	$R_1$  		& Log$\mathcal{N}$(log(20.0), 0.8)   & Log$\mathcal{N}$(log($R_1$), 0.08)   \\
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.01, lower = 0, upper = 0.2) \\
+	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.005, lower = 0.6, upper = 1.0)\\
+	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.005, lower = 0.6, upper = 1.0)\\
+	$\sigma_{O_2}$ 	& 0.3 	& * \\
+	$\sigma_{pH}$ 	& 0.3 	& * \\
+	$\sigma_{DIC}$ 	& 0.3 	& * \\	
+\end{tabular}
+\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed.}
+
+ 
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/posterior_plots_with_fake_data/O2_pH}}
@@ -623,6 +614,7 @@ Decide whether the parameters vary in time or not.
 		\label{table:micro_parameters_sim}
 \end{longtable}
 
+\textbf{Results:}\\
 After 50,000 samples the true values of parameters $R_1$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P_1$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P_1$, $R_1$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
 
 
@@ -638,7 +630,50 @@ Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_
 
 
 \FloatBarrier
-\subsection{Posteriors with simulated data version 2}
+\subsection{Posteriors with simulated data (photosynthesis and respiration modelled as random walks)}
+% micro_iterative_fake.bi
+
+State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
+
+\textbf{In this run:}\\
+$kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ and all treated as parameters constant through time but unknown. 
+Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+\begin{displaymath}
+P_1(t+\Delta t) = P(t) + r_P
+\end{displaymath}
+\begin{displaymath}
+R_1(t+\Delta t) = R(t) + r_R
+\end{displaymath}
+where \begin{math}
+r_P \sim N(0, \sigma_{r_P})
+\end{math}, \begin{math}
+r_R \sim N(0, \sigma_{r_R})
+\end{math}, and \begin{math}
+\Delta t
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. 
+
+The data model assigned log normally distributed observation errors for each instrument;\\
+$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
+$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
+$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
+$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+
+\begin{tabular}{c | c  |  c}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.01, lower = 0, upper = 0.2) \\
+	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.005, lower = 0.6, upper = 1.0)\\
+	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.005, lower = 0.6, upper = 1.0)\\
+	$\sigma_{r_P}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0001)   \\
+	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
+	$\sigma_{O_2}$ 	& 0.3 	& * \\
+	$\sigma_{pH}$ 	& 0.3 	& * \\
+	$\sigma_{DIC}$ 	& 0.3 	& * \\	
+\end{tabular}
+\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed.}
+
 
 
 \begin{figure}
@@ -681,8 +716,6 @@ Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_
 \begin{longtable}{|c|c|c|c|} 
 	\hline
 	\bfseries{Parameter}  & \bfseries{Quantiles (25\%, 75\%)}  & \bfseries{Quantiles (5\%, 95\%)} &  \bfseries{True value} \\ \hline
-	$P_1$ 				& () 					& () 					&  200  \\ 
-	$R_1$ 				& () 					& ()					& 	30 \\ 
 	$kLA_{O_2}^{air}$ 	& (170.9854, 216.0578)  & (145.6899, 253.4652)  &  200 \\
 	$K_m$ 				& (187.3586, 386.4103) 	& (93.9670, 641.1432) 	&  150 \\ 
 	$R_R$ 				& (0.0521, 0.1075) 		& (0.0192, 0.1544) 		& 0.075 \\
@@ -693,48 +726,91 @@ Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_
 	\label{table:micro_parameters_sim_other}
 \end{longtable}
 
-Ran for 50,000 samples, discarded first 10,000 as burn-in. $P_1$ and $R_1$ as random walks with $\sigma_{rP}$ and $\sigma_{rR}$ as standard deviations of the random walks and parameters to be estimated.  
 
+
+\textbf{Results:}\\
 After 50,000 samples the true values of parameters $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim_other}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim_other}). 
-Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_other_trace}).
-
-****This results section came out the same as the first model with the simulated observations.
+Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_other_trace}). The true values of $P_1$ (200) and $R_1$ (30) lie within the posterior 95\% credible intervals
+(Figure \ref{fig:pos_sim_P_and_R_other}).
 
 \FloatBarrier
-\subsection{Posteriors with experimental data}
+\subsection{Posteriors with experimental data (photosynthesis, respiration and respiratory quotients are random walks)}
+% micro_iterative_chris.bi
 
-40,000 samples run with 1024 particles (40,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was XX.
+State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
 
-$P_1$ and $R_1$ are random walks. $RQ_d$ and $RQ_n$ are random walks. State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
+\textbf{In this run:}\\
+Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+\begin{displaymath}
+P_1(t+\Delta t) = P(t) + r_P
+\end{displaymath}
+\begin{displaymath}
+R_1(t+\Delta t) = R(t) + r_R
+\end{displaymath}
+where \begin{math}
+r_P \sim N(0, \sigma_{r_P})
+\end{math}, \begin{math}
+r_R \sim N(0, \sigma_{r_R})
+\end{math}, and \begin{math}
+\Delta t
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
+The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
+$kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$ are all treated as parameters constant through time but unknown. 
+The data model assigned log normally distributed observation errors for each instrument;\\
+$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
+$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
+$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
+$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+
+\FloatBarrier
+\begin{tabular}{c | c  |  c}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.005, lower = 0, upper = 0.2) \\
+%	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.005, lower = 0.6, upper = 1.0)\\
+%	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.005, lower = 0.6, upper = 1.0)\\
+	$\sigma_{r_P}$ & $\mathcal{N}$(0.02, 0.002)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0002)   \\
+	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
+	$\sigma_{O_2}$ 	& 0.3 	& * \\
+	$\sigma_{pH}$ 	& 0.3 	& * \\
+	$\sigma_{DIC}$ 	& 0.5 	& * \\	
+\end{tabular}
+\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed.}
+
+\FloatBarrier
+
+
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/O2_pH}}
 	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
-	\label{fig:pos_O2_pH}
+	\label{fig:micro_exp_O2_pH}
 \end{figure}
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/DIC_TA_Cp}}
 	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
-	\label{fig:pos_DIC_TA}
+	\label{fig:micro_exp_DIC_TA_Cp}
 \end{figure}
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/carbon}}
 	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
-	\label{fig:pos_carbon}
+	\label{fig:micro_exp_carbon}
 \end{figure}
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/P_and_R}}
 	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$ and respiration $R_1$.}
-	\label{fig:pos_P_R}
+	\label{fig:micro_exp_P_R}
 \end{figure}
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris/RQ_d_RQ_n}}
 	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_d$ and $RQ_n$.}
-	\label{fig:pos_RQ_d_RQ_n}
+	\label{fig:micro_exp_RQ_d_RQ_n}
 \end{figure}
 
 
@@ -742,13 +818,13 @@ $P_1$ and $R_1$ are random walks. $RQ_d$ and $RQ_n$ are random walks. State post
 \begin{figure}
 	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris/modelparameters1}}
 	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:pos_parameters_model}
+	\label{fig:micro_exp_parameters_model}
 \end{figure}
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris/modelparameters1_trace}}
 	\caption[.]{Traces for model parameters.}
-	\label{fig:pos_parameters_model2}
+	\label{fig:micro_exp_parameters_model2}
 \end{figure}
 
 
@@ -764,8 +840,206 @@ $P_1$ and $R_1$ are random walks. $RQ_d$ and $RQ_n$ are random walks. State post
 	
 	\hline
 	\caption[.]{Posterior (25\%, 75\%), (5\%, 95\%) quantiles for parameters after assimilating observations.}	
-	\label{table:micro_parameters_exp}
+	\label{table:micro_exp_parameters_table}
 \end{longtable}
+
+\textbf{Results:}\\
+40,000 samples run with 1024 particles (40,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was XX.
+
+Observed state variables $DIC$ and $TA$ posteriors perform well with all observations lying within the 95\% credible intervals (Figure \ref{fig:micro_exp_DIC_TA_Cp}). $O_2$ posteriors tracked the observations well while the light was on, with all observations falling inside tightly constrained 95\% credible intervals. During times when there was no light, most days the posteriors would fit the observations well to start and then potentially there was a sensor drift causing increasing observations that the model was not accounting for (Figure \ref{fig:micro_exp_O2_pH}). $pH$ captured most observations within the 95\% credible intervals except for 2 points on the 1st day while the light was off (Figure \ref{fig:micro_exp_O2_pH}).
+ 
+
+$P_1$
+$R_1$
+(Figure \ref{fig:micro_exp_P_R}).
+
+The day-time respiratory quotient $RQ_d$ centred around 0.75 during the first day, dropped to 0.6 during the 2nd, 3rd and 4th days. The night-time respiratory quotient $RQ_n$ centred around 0.85 and slowly rose to 1.1 by the end of the experiment. [Values $>$1 are not really realistic but this can be a compensation for not having an offset on the $O_2$ obs]
+
+
+
+
+
+\FloatBarrier
+\subsection{Posteriors with experimental data (photosynthesis and respiration are random walks and the respiratory quotients are noisy states)}
+% micro_iterative.bi
+
+State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
+
+\textbf{In this run:}\\
+Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+\begin{displaymath}
+P_1(t+\Delta t) = P(t) + r_P
+\end{displaymath}
+\begin{displaymath}
+R_1(t+\Delta t) = R(t) + r_R
+\end{displaymath}
+where \begin{math}
+r_P \sim N(0, \sigma_{r_P})
+\end{math}, \begin{math}
+r_R \sim N(0, \sigma_{r_R})
+\end{math}, and \begin{math}
+\Delta t
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
+The respiratory quotients ($RQ_d$ and $RQ_n$) are treated as normally distributed noisy states, truncated between 0.6 and 1, where the mean and standard deviation are unknown parameters to be estimated. 
+$
+RQ_d \sim truncated\mathcal{N}(\mu_{RQ_d}, \sigma_{RQ_d}, lower = 0.6, upper = 1.0) \\
+RQ_n \sim truncated\mathcal{N}(\mu_{RQ_n}, \sigma_{RQ_n}, lower = 0.6, upper = 1.0) \\ $
+
+$kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$, $\mu_{RQ_d}$, $\sigma_{RQ_d}$, $\mu_{RQ_n}$, $\sigma_{RQ_n}$ are all treated as parameters constant through time but unknown. 
+
+
+\begin{tabular}{c | c  |  c}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.01, lower = 0, upper = 0.2) \\
+	$\mu_{RQ_d}$  	& Uniform(0.6, 1) &  $\mathcal{N}$($\mu_{RQ_d}$, 0.01)\\
+	$\mu_{RQ_n}$  	& Uniform(0.6, 1) &  $\mathcal{N}$($\mu_{RQ_n}$, 0.01)\\
+	$\sigma_{RQ_d}$ & Uniform(0, 0.5) &  $\mathcal{N}$($\sigma_{RQ_d}$, 0.01)\\
+	$\sigma_{RQ_n}$ & Uniform(0, 0.5) &  $\mathcal{N}$($\sigma_{RQ_n}$, 0.01)\\
+	$\sigma_{r_P}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0001)   \\
+	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
+	$\sigma_{O_2}$ 	& 0.4	& *  \\
+	$\sigma_{pH}$ 	& 0.4 	& * \\
+	$\sigma_{DIC}$ 	& 0.4	& * \\	
+\end{tabular}
+\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed.}
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
+	\label{fig:micro_exp_iterative_O2_pH}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
+	\label{fig:micro_exp_iterative_DIC_TA_Cp}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
+	\label{fig:micro_exp_iterative_carbon}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/P}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$.}
+	\label{fig:micro_exp_iterative_P}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/R}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for respiration $R_1$.}
+	\label{fig:micro_exp_iterative_R}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/RQ_d}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_d$.}
+	\label{fig:micro_exp_iterative_RQ_d}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_iterative/RQ_n}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_n$.}
+	\label{fig:micro_exp_iterative_RQ_n}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_iterative/model_parameters}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_iterative_parameters_model}
+\end{figure}
+
+
+\textbf{Results:}\\
+10,000 samples run (no burn-in was discarded) with 1024 particles.
+
+
+
+
+\FloatBarrier
+\subsection{Posteriors with experimental data (estimating obs error)}
+% micro_iterative_test.bi
+
+State posteriors are visualised by plotting the median and shading 95\% credible intervals, while parameter priors and posteriors are displayed by histograms.
+
+\textbf{In this run:}\\
+$P_1$ and $R_1$ are random walks with $rP$ and $rR$ as wiener processes. 
+$kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, $RQ_n$, $\sigma_{O_2}$, $\sigma_{pH}$, and $\sigma_{DIC}$  are all treated as parameters constant through time but unknown. The data model in this run is:
+
+$O2_{obs} \sim normal(O_2, \sigma_{O_2}) \\
+pH_{obs}  \sim normal(pH,  \sigma_{pH})  \\
+DIC_{obs} \sim normal(DIC, \sigma_{DIC}) \\
+TA_{obs} \sim normal(TA, \sigma_{DIC})   \\ $
+
+
+\begin{tabular}{c | c  |  c}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.01, lower = 0, upper = 0.2) \\
+	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.01, lower = 0.6, upper = 1.0)\\
+	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.01, lower = 0.6, upper = 1.0)\\
+	%	$\sigma_{r_P}$ & $\mathcal{N}$(0.02, 0.002)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0002)   \\
+	%	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
+	$\sigma_{O_2}$ 	& Uniform(0, 20) 	& Trun$\mathcal{N}$($\sigma_{O_2}$, 2, lower = 0, upper = 20)  \\
+	$\sigma_{pH}$ 	& Uniform(0, 1) 	& Trun$\mathcal{N}$($\sigma_{pH}$, 0.1, lower = 0, upper = 1) \\
+	$\sigma_{DIC}$ 	& Uniform(0, 150)	& Trun$\mathcal{N}$($\sigma_{DIC}$, 15, lower = 0, upper = 150) \\	
+\end{tabular}
+\captionof{table}{Table of Parameters, their priors and proposal distributions. * indicates the parameter was held fixed.}
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
+	\label{fig:micro_exp_test_O2_pH}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
+	\label{fig:micro_exp_itest_DIC_TA_Cp}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
+	\label{fig:micro_exp_test_carbon}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/P_and_R}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$.}
+	\label{fig:micro_exp_test_P}
+\end{figure}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters1}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model1}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters2}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model2}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters3}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model3}
+\end{figure}
+
 
 
 
