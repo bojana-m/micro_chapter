@@ -245,8 +245,8 @@ Ode's:
 \begin{table}[ht]
 \caption{Multi-row table}
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
-	& Symbol & Description  & Prior / Value \\
+\begin{tabular}{|c|c|c|c|c|}
+	& Symbol & Description  & Prior / Value & Units\\
     \hline
     \multirow{4}{*}{\rotatebox[origin=c]{90}{State variable}}
     &DIC$^0$&Y\\
@@ -256,13 +256,14 @@ Ode's:
     \\
     \hline
     \multirow{4}{*}{\rotatebox[origin=c]{90}{Gas transfer terms}}
-    &$ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1 \\
+    &$ \hat Q ^{air} $ &indicator for flow in air line  & 0 or 1  & - \\
     
-    &CO$_{2H}$  & Equilibrium CO$_2$ concentration  & $\mu$M  \\
-    & $x_{O_2}^{air} $ & mole fraction of O$_2$ atmosphere& 0.2094 \\ 
-    & $x_{CO_2}^{air} $ & mole fraction of CO$_2$ atmosphere& 400ppm \\ 
-    & $CO_{2}^{air}$ & sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$\\
-    &TA$^0$ &Y\\
+    &CO$_{2H}$  & Equilibrium CO$_2$ concentration  & Eq{?} & $\mu M$ \\
+    & $x_{O_2}^{air} $ & mole fraction of O$_2$ atmosphere& 0.2094 & - \\ 
+    & $x_{CO_2}^{air} $ & mole fraction of CO$_2$ atmosphere& 400ppm  & - \\ 
+    & $CO_{2}^{air}$ & sat CO$_2$ conc with atmosphere &   $x_{CO_2}^{air} CO_{2H}$ & $\mu M$\\
+    & $\tau^{air} $ & half-life for gas transfer in air line  &   LogNormal( 5, 0.5 )  & min \\
+    & $kLa_{O2}^{air}$& mass transfer term &$\ln(2)*60*24/\tau_{air}$  & day$^{-1}$\\
     \\
     \\
 \end{tabular}
