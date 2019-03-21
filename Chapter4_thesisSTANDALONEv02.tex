@@ -84,18 +84,20 @@
 
 \section{Introduction}\label{sec:micro_intro} 
 
-The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photoÄêbioreactors.
+The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photoÄêbioreactors.   Primary goal is maximise the production raw biomass.  
 
-At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction
+\subsection{Overview} 
+At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction in which \ce{C} is taken from the atmosphere as \ce{CO_2}, along with aqueous nutrients \ce{N} and \ce{P}, to produce biomass
 
-\begin{align}
+\begin{align}\label{eq:chem_simple)
 \ce{
  106 CO_2(g)  + 122 H_2O  + 16  NO_3^-(aq)  + PO_4^{3-}(aq)  + 19 H^+}\nonumber\\
  \ce{
-  \reactrarrow{0pt}{2.5cm}{$\left[10^3-10^4\right]\gamma$}{} C_{106} H_{263} O_{110} N_{16} P_1 + 138 O_2 }(aq)
+  \reactrarrow{0pt}{2.5cm}{$\left[10^3-10^4\right]\gamma$}{} C_{106} H_{263} O_{110} N_{16} P_1 + 138 O_2 (g)}
 \end{align}
 
-This equation captures a number of features that interest.  The total biomass is determined by the concentrations of \ce{N} and \ce{P}. A typical growth media for microalgae is  Guillard's Marine Enriched Seawater (F/2), which has 
+This equation captures a number of features of interest.  The total biomass is determined by the concentrations of \ce{N} and \ce{P}. A typical growth media for microalgae is Guillard's Marine Enriched Seawater (F/2), which has 
+ 
 \begin{table}
 \begin{tabular}{ |c|r|}
 \textbf{species} & \textbf{conc} \\
@@ -106,7 +108,15 @@ TA & $2300 \mu M$
 \end{tabular}
 \end{table}
 
-Taking the limiting nutrient to be Nitrogen, the maximum biomass of algae is $200 mg L^{-1}$, of which about $70 mg L^{-1}$ is Carbon.  At Standard Temperature and Pressure, this is would be $0.12 L$ of pure \ce{CO_2} which is equivalent to $325 L$ of air for each litre of media.
+\begin{itemize}
+\item{\textbf{Biomass}:} Taking the limiting nutrient to be Nitrogen, the maximum biomass of algae is $200 mg L^{-1}$, of which about $70 mg L^{-1}$ is Carbon.  This is equivalent  $0.12 L$ of pure \ce{CO_2} At Standard Temperature and Pressure, which around to $325 L$ of air for each litre of media.
+
+\item{\textbf{Change in alkalinity}:} Alkalinity is central concept in seawater chemistry that allows one to calculate how much Carbon can be dissovled in solution, and what form it takes (Dissolved Inorganic Carbon exists as \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_3^{2-}}).  Alkalinity measures the charge imbalance between strongly and weakly disociating ions in solution.  As the charged nutrients are removed from the solution during growth the alkainty increases and more Carbon is able to be dissolved in the media.
+\end{itemize}
+
+\subsubsection{Carbon in seawater}
+ Of
+ 
  
 %ce{ CO_2 }
 
