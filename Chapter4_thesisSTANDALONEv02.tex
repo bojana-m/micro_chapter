@@ -69,6 +69,9 @@
 \titleformat{\subsubsection}
   {\bfseries\itshape\normalsize}{\thesubsubsection}{1em}{}
 
+\usepackage[version=4]{mhchem}
+\usepackage{chemist}
+
 \begin{document}
 \tableofcontents
 
@@ -81,7 +84,41 @@
 
 \section{Introduction}\label{sec:micro_intro} 
 
-The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photo‚Äêbioreactors.
+The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photoÄêbioreactors.   Primary goal is maximise the production raw biomass.  
+
+\subsection{Overview} 
+At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction in which \ce{C} is taken from the atmosphere as \ce{CO_2}, along with aqueous nutrients \ce{N} and \ce{P}, to produce biomass
+
+\begin{align}\label{eq:chem_simple)
+\ce{
+ 106 CO_2(g)  + 122 H_2O  + 16  NO_3^-(aq)  + PO_4^{3-}(aq)  + 19 H^+}\nonumber\\
+ \ce{
+  \reactrarrow{0pt}{2.5cm}{$\left[10^3-10^4\right]\gamma$}{} C_{106} H_{263} O_{110} N_{16} P_1 + 138 O_2 (g)}
+\end{align}
+
+This equation captures a number of features of interest.  The total biomass is determined by the concentrations of \ce{N} and \ce{P}. A typical growth media for microalgae is Guillard's Marine Enriched Seawater (F/2), which has 
+ 
+\begin{table}
+\begin{tabular}{ |c|r|}
+\textbf{species} & \textbf{conc} \\
+\hline
+N  &  $ 880 \mu M$ \\
+P   & $   36  \mu M$ \\
+TA & $2300 \mu M$
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item{\textbf{Biomass}:} Taking the limiting nutrient to be Nitrogen, the maximum biomass of algae is $200 mg L^{-1}$, of which about $70 mg L^{-1}$ is Carbon.  This is equivalent  $0.12 L$ of pure \ce{CO_2} At Standard Temperature and Pressure, which around to $325 L$ of air for each litre of media.
+
+\item{\textbf{Change in alkalinity}:} Alkalinity is central concept in seawater chemistry that allows one to calculate how much Carbon can be dissovled in solution, and what form it takes (Dissolved Inorganic Carbon exists as \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_3^{2-}}).  Alkalinity measures the charge imbalance between strongly and weakly disociating ions in solution.  As the charged nutrients are removed from the solution during growth the alkainty increases and more Carbon is able to be dissolved in the media.
+\end{itemize}
+
+\subsubsection{Carbon in seawater}
+ Of
+ 
+ 
+%ce{ CO_2 }
 
 Carbon and light availability are two of the most common limiting factors of biomass productivity \cite{posten2009design}.
 
@@ -109,9 +146,18 @@ A period of 2 days was allowed for \emph{N. occulata} to acclimate to the ePBRs 
 ePBRs were maintained at an optical density (OD) of 0.4 using manual dilutions, creating a semi-batch culturing system. Dilutions occurred once per day (one hour before the light cycle), using aerated f/2 media. The experiment was conducted over a period of 4 days, samples were extracted post and prior dilution, as well as half way through the light cycle. %2$\mskip3mu$mL samples were extracted to measure: OD$_{750}$, cell density, nitrogen concentration and phosphorous concentration. 50$\mskip3mu$mL was extracted to examine alkalinity, dry weight, carbon percentage and nitrogen percentage. 
 50$\mskip3mu$mL was extracted to examine total alkalinity and dissolved inorganic carbon. 
 %Both pH and DO were measured every 5 mins and 1 min respectively; to generate dynamic daily profiles. 
-Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (OXROB10-OI; PyroScience GmbH) attached to a FireStingO2 logger (PyroScience GmbH). DO measurements were taken every 60 seconds and temperature-corrected using a temperature extension module (TeX4; PyroScience GmbH). DO was two-point calibrated using air-saturated seawater (100\% saturation) and sodium sulfate-saturated water (0\% saturation). At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes to allow for observations of net photosynthesis. Alkalinity was measured twice a day using TA titration; 0.1$\mskip3mu$M hydrochloric acid on 30$\mskip3mu$mL of \emph{N. oceanica} media using an auto-titrator (800 Dosino; Metrohm AG). 
+Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (OXROB10-OI; PyroScience GmbH) attached to a FireStingO2 logger (PyroScience GmbH). DO measurements were taken every 60 seconds and temperature-corrected using a temperature extension module (TeX4; PyroScience GmbH). DO was two-point calibrated using air-saturated seawater (100\% saturation) and sodium sulfate-saturated water (0\% saturation). At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes to allow for observations of net photosynthesis. 
+
+Alkalinity and DIC was measured twice a day closely following the Standard Operating Procedures (SOP) outline in \cite{dickson2007guide}.  Approximately 30$\mskip3mu$mL of \emph{N. oceanica} media was titrated 
+agains 0.1$\mskip3mu$M hydrochloric acid on an auto-titrator (800 Dosino; Metrohm AG) [SOP3b Open-cell tritration]. 
 
 [Chris: DIC measurement collection description]
+The Total Alkalinity and DIC were calculated from the output of the auto-titrator (volume of HCl delivered, pH) by calculating the the pH as a function of the volume of the acid delivered (see SOP3a Annexe 1).  Bayesian inference on TA, DIC, voffset, fK1, fK2, pHoff, pHslope.
+ 
+table here for priors    
+
+link to code.
+
 
 [BM: confirm that reference with PW]
 
@@ -127,13 +173,22 @@ $O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$), $pH_{obs}$ $\
 
 
 [Chris/SW: should I talk about the thinning out of $O_2$ and pH obs?]
-
+[Chris, if you can be bothered Yes,  you might even expand this a bit by showing the a couple of runs with differing density.  This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one) 
 
 \subsection{Process model: Carbon chemistry}
 
+[ Chris : Carbon in seawater summary ]
+main equations and rate constants
+role of TA
+This consists of 4(?) equations with (4?) uknowns
+
 Ideally CO2SYS \cite{lewis1998program} would have been used to calculate the carbon chemistry of the photo-bioreactor. 
 CO2SYS is a program developed for CO$_2$ system calculations (CO2SYS) that calculates and returns a detailed state of the carbonate system of oceanographic water samples in seawater and freshwater \cite{lewis1998program}.
-Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure). 
+A thorough explanation of CO2SYS, and seawater carbon chemistry in general, can be found in  Zeebe and Wolf-gladrow \cite{zeebe2001co2}.  A concise summary of the equations can be found in SOP 3a, Annexe 1 of \cite{dickson2007guide}.
+
+Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure).  In the model the state variables TA and DIC are given and the pH and pCO$_2$ are calculated. 
+
+
 
 To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
