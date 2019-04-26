@@ -141,7 +141,7 @@ Carbon and light availability are two of the most common limiting factors of bio
 
 \section{Methods}
 
-\subsection{Data Model: Photo-bioreactor setup, experimental design and data collection methods}
+\subsection{Data Model: Photo-bioreactor setup, experimental design and data collection methods}\label{sec:micro_data_collection}
 
 All data collection methods for this chapter were part of a series of experiments examining microalgal responses to photobiorector treatments (Peter Wood 2019 UTS PhD).
 
@@ -151,7 +151,7 @@ Microalgal culture \emph{Nannochloropsis oceanica} (Droop) Green (strain CS-179)
 \emph{N. oceanica} was cultured in four, 500$\mskip3mu$mL environmental photo-bioreactors (ePBRs, Phenometrics Inc) with a 10\% v/v inoculation of stock culture. Top-side illumination over a path length of 25$\mskip3mu$cm was provided by a cool-white light LED, whilst temperature was maintained at 27$^{\circ}$C using a Peltier heater-cooler connected to a water jacket. In-built thermocouples, calibrated against external temperature sensors attached to the Firesting module (TeX4; PyroScience GmbH), measured every 5 minutes were used to control the Peltier heater-cooler jacket through a feedback loop to an accuracy of $\pm$ 0.2$^{\circ}$C. pH was also measured in 5 min intervals by in-built pH electrodes (Van London Inc); controlled by periodic CO2 (5\%) injections using valves in the ePBRs. pH was 3-point calibrated using pH buffer solutions at pH 4.00 $\pm$ 0.02, pH 7.00 $\pm$ 0.02 and pH 10.00 $\pm$ 0.02.  PBR mixing was controlled by magnetic stirring bars at 110 rpm. All four ePBRs were aerated with filtered/humidified air through a 1.2$\mskip3mu$mm needle valve (Terumo Co). 
 
 
-A period of 2 days was allowed for \emph{N. occulata} to acclimate to the ePBRs at an irradiance of 500$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ and a temperature of 27$^{\circ}$C. Following this acclimation period, the PBR was set to the experimental condition of 2,000$\mskip3mu$$\mu$mol$\mskip3mu$photons$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ for another 2 days and a 12 hour light/12 hour dark cycle with a temperature of 27$^{\circ}$C. 
+A period of 2 days was allowed for \emph{N. occulata} to acclimate to the ePBRs at an irradiance of 500$\mskip3mu$$\mu$mol$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ and a temperature of 27$^{\circ}$C. Following this acclimation period, the ePBR was set to the experimental condition of 2,000$\mskip3mu$$\mu$mol$\mskip3mu$photons$\mskip3mu$m$^{-2}$$\mskip3mu$s$^{-1}$ for another 2 days and a 12 hour light/12 hour dark cycle with a temperature of 27$^{\circ}$C. 
 ePBRs were maintained at an optical density (OD) of 0.4 using manual dilutions, creating a semi-batch culturing system. Dilutions occurred once per day (one hour before the light cycle), using aerated f/2 media. The experiment was conducted over a period of 4 days, samples were extracted post and prior dilution, as well as half way through the light cycle. %2$\mskip3mu$mL samples were extracted to measure: OD$_{750}$, cell density, nitrogen concentration and phosphorous concentration. 50$\mskip3mu$mL was extracted to examine alkalinity, dry weight, carbon percentage and nitrogen percentage. 
 50$\mskip3mu$mL was extracted to examine total alkalinity and dissolved inorganic carbon. 
 %Both pH and DO were measured every 5 mins and 1 min respectively; to generate dynamic daily profiles. 
@@ -161,19 +161,13 @@ Alkalinity and DIC was measured twice a day closely following the Standard Opera
 against 0.1$\mskip3mu$M hydrochloric acid on an auto-titrator (800 Dosino; Metrohm AG) [SOP3b Open-cell tritration]. 
 
 [Chris: DIC measurement collection description]
-The Total Alkalinity and DIC were calculated from the output of the auto-titrator (volume of HCl delivered, pH) by calculating the the pH as a function of the volume of the acid delivered (see SOP3a Annexe 1).  Bayesian inference on TA, DIC, voffset, fK1, fK2, pHoff, pHslope.
+The Total Alkalinity and DIC were calculated from the output of the auto-titrator (volume of HCl delivered, pH) by calculating the the pH as a function of the volume of the acid delivered (see SOP3a Annexe 1).
  
-table here for priors    
-
-link to code.
-
-
-[BM: confirm that reference with PW]
 
 
 \subsection{Data model: Data treatment, distributions and measurement error}
 
-Valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
+Gas valve, temperature, light (normalised to 0/1) and dilution rates were used to force the model.
 Dissolved oxygen, pH, dissolved inorganic carbon and total alkalinity observations for 4 days post acclimation were assimilated. 
 While pH observations were calibrated and corrected, it was visible that $O_2$ observations were not completely calibrated and experienced some sensor drift during the experiment. %An offset term ($offset_{O_2}$) was added to the $O_2$ ode to account for this. The offset was assigned a normally distributed prior distribution with mean 0 and standard deviation 2. [BM:check the offset is still there and you did it this way otherwise change/remove.]
 
@@ -182,10 +176,11 @@ $O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$), $pH_{obs}$ $\
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.25\textwidth]{images_microalgae/plots/thinned_obs_micro}}
-	\caption[.]{Full $O_2$ and $pH$ datasets with two versions of thinned $O_2$ observations and a single thinned $pH$ dataset.}
+	\caption[.]{Full $O_2$ and $pH$ datasets with thinned $O_2$ and $pH$ observations.}
 	\label{fig:thinned_obs_micro}
 \end{figure}
-Due to different instruments used in data collection, $O_2$ observations were collected most frequently (6008 data-points), followed by $pH$ observations (1179 data-points), with $DIC$ and $TA$ collected intermittently (11 data-points). Initial posterior runs with these observation densities resulted in the MCMC chain unable to mix properly due to the high density of observations. The $pH$ observations were thinned once to 5\% of the full $pH$ dataset. The $O_2$ observations were then thinned twice, the first time to approximately 15\% of the original $O_2$ dataset and afterwards to approximately 5\% of the original dataset to test whether thinning the $O_2$ observations further would improve MCMC performance (Figure \ref{fig:thinned_obs_micro}).
+Due to different instruments used in data collection, $O_2$ observations were collected most frequently (6008 data-points), followed by $pH$ observations (1179 data-points), with $DIC$ and $TA$ collected intermittently (11 data-points). Initial posterior runs with these observation densities resulted in the MCMC chain unable to mix properly due to the high density of observations. In an attempt to improve MCMC mixing, the denser observation sets were thinned/sampled down. The $pH$ observations were thinned to approximately 5\% of the full $pH$ dataset by taking every 30th observation. The $O_2$ observations were thinned to approximately 15\% of the original $O_2$ dataset by only taking those consecutive observations that had at least 1$\mskip3mu$$\mu$M L$^{-1}$ difference (Figure \ref{fig:thinned_obs_micro}).
+
 
 \FloatBarrier
 \subsection{Process model: Carbon chemistry}
@@ -322,7 +317,7 @@ CO_{3_{n+1}}  		&= \frac{K_1 K_2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}\label{n
 
 
 \FloatBarrier
-\subsection{Process model: Gas transfer equilibrium concentrations for O$_2$ and CO$_2$}
+\subsection{Process model: Gas transfer equilibrium concentrations for $O_2$ and $CO_2$}
 
 %Weiss 1970 (O2) and 1974 (CO2) 
 
@@ -332,33 +327,33 @@ CO_{3_{n+1}}  		&= \frac{K_1 K_2 DIC}{H_{n+1}^2 + K_1 H_{n+1} + K_1 K_2}\label{n
 %\end{aligned}
 %\end{equation}
 
-The equilibrium concentration for CO$_2$ solubility in water CO$_{2H}$ ($\mu$mol/L) is calculated using Henry's law,
+The equilibrium concentration for $CO_2$ solubility in water $CO_{2H}$ ($\mu$mol/L) is calculated using Henry's law,
 \begin{equation}\label{eq:CO2H_eq}
 CO_{2H}=K0_{CO2}*fCO2*1.0220*1e6
 \end{equation}
-where fCO2 (atm) is the fugacity or approximately the partial pressure of CO$_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}. K0$_{CO2}$ (mol/kg$_{soln}$/atm) is the solubility of gas in seawater [BM: ask Chris: solubility of gas? is this right] and is calculated from the fitted van't Hoff equation and the logarithmic Setchenow salinity dependence \cite{weiss1974carbon},
+where fCO2 (atm) is the fugacity or approximately the partial pressure of $CO_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}. K0$_{CO2}$ (mol/kg$_{soln}$/atm) is the solubility of gas in seawater [BM: ask Chris: solubility of gas? is this right] and is calculated from the fitted van't Hoff equation and the logarithmic Setchenow salinity dependence \cite{weiss1974carbon},
 \begin{equation}
 \begin{aligned}
 K0_{CO2} = e^{(- 60.2409 + 93.4517\frac{100}{T_K}  + 23.3585*log(\frac{T_K}{100})+ 
 S(0.023517 - 0.023656\frac{T_K}{100} + 0.0047036(\frac{T_K}{100})^2))}
 \end{aligned}
 \end{equation}
-where T$_K$ is the temperature (K) and S is salinity (ppt).
+where $T_K$ is the temperature (K) and $S$ is salinity (ppt).
 %% from Weiss 1974 paper:
 %K0 may be expressed either in moles/1 * atm, referring to a liter of solution at %the temperature of the measurement and an atmosphere fugacity in
 %the gas phase, or in moles/kg * atm, referring to a kilogram of solution.
-Similarly the equilibrium concentration for O$_2$ solubility in water O$_{2H}$ is calculated using Henry's law,
+Similarly the equilibrium concentration for $O_2$ solubility in water $O_{2H}$ is calculated using Henry's law,
 \begin{equation}\label{eq:O2H_eq}
 O_{2H}=K0_{O2}*fO2*1.0220*1e-6
 \end{equation}
-where fO2 (atm) is the fugacity or approximately the partial pressure of O$_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}, and K0$_{O2}$ (mol/kg$_{soln}$/atm) is the solubility of oxygen in seawater with an adjusted salinity dependence \cite{battino1983solubility},
+where fO2 (atm) is the fugacity or approximately the partial pressure of $O_2$, 1.0220 is the density of seawater (kg/L) at salinity 34 ppt and temperature 27$^{\circ}$C \cite{ramsing2011seawater} \cite{greensberg1992standard}, and K0$_{O2}$ (mol/kg$_{soln}$/atm) is the solubility of oxygen in seawater with an adjusted salinity dependence \cite{battino1983solubility},
 \begin{equation}
 \begin{aligned}
 K0_{O2} =  \frac{e^{(-1282.8704 + \frac{36619.96}{T_K} + 223.1396 log(T_K) -0.354707 T_K 
 + S(5.957e-3 -\frac{3.7353}{T_K}) + 3.68e-6 S^2)}}{0.2094e-6}
 \end{aligned}
 \end{equation}
-where T$_K$ is the temperature (K) and S is salinity (ppt).
+where $T_K$ is the temperature (K) and $S$ is salinity (ppt).
 %from Weiss 1970:
 %\begin{equation}
 %\begin{aligned}
@@ -366,7 +361,7 @@ where T$_K$ is the temperature (K) and S is salinity (ppt).
 %S(-0.034892 + 0.015568(T_K/100) - 0.0019387(T_K/100)^2))
 %\end{aligned}
 %\end{equation}
-The equilibrium concentrations for O$_2$ and CO$_2$ are modelled together with the gas turning on and off during the experiment, as
+The equilibrium concentrations for $O_2$ and $CO_2$ are modelled together with the gas turning on and off during the experiment, as
 \begin{equation}
  Q^{air} kLa_{O_2}^{air} (O_{2H} - O_{2})
 \end{equation}
@@ -377,45 +372,57 @@ where $Q^{air}$ is the gas state (1= on, 0= off), $kLa_{O_2}^{air}$ and $kLa_{CO
 
 
 
-\subsection{Process model: Photosynthesis and respiration}
+\subsection{Process model: Flux into cells by photosynthesis and respiration}
 
-Net photosynthesis
+The carbon flux into cells is measured by net photosynthesis,
 \begin{align}
 \frac{\partial DIC}{dt} &=&  -(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  - R_1) 
 \\
 \frac{\partial O_2}{dt}	&=&  \frac{1}{(RQ_d I + RQ_n(1-I))}(P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}  - R_1)
 \\
-\frac{\partial TA}{\partial t}  &=&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-})
+\frac{\partial TA}{\partial t}  &=&      R_R (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-}) \phantom{- R_1)}
 \\
-\frac{\partial C_p}{\partial t} &=& (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1) 
+\frac{\partial C_p}{\partial t} &=& 	 (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1) 
 \\\nonumber
 \end{align} 
+where the parameters common to all states are $P_1$, the maximum photosynthesis rate ($\mu$M L$^{-1}$ hour$^{-1}$), $I$ the light indicator (0/1), and the michaelis menton term $\frac{HCO_3^-}{K_m + HCO_3^-}$ representing the photosynthetically active carbon used for photosynthesis. This can be $CO_2$, $HCO_3^-$, or a combination of both, $CO_2 + HCO_3^-$ if the microalgae are using both carbon dioxide and bicarbonate for photosynthesis. $K_m$ is the carbon restriction term ($\mu$M L$^{-1}$).
 
+
+
+and $R_1$ is the respiration rate ($\mu$M L$^{-1}$ hour$^{-1}$).
 
 
 $RQ_d$ and $RQ_n$ are the day and night respiratory quotients, the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
 
+$R_R$ is the Redfield ratio
 
 
+$C_p$ is the amount of carbon in the PBR in the form of cells, it is the same amount as the photosynthesis term in the DIC state. it is also subject to dilution. The aim of including this is the first step towards quantifying the biomass. later you can build in light etc 
 
-The michaelis menton term $ \frac{HCO_3^-}{K_m + HCO_3^-} $ represents the photosynthetically active carbon that the microalgae use for photosynthesis. 
-%This can be CO$_2$, HCO$_3^-$, or a combination of both, eg $PAC = CO_2 + HCO_3^-$ if the microalgae are using both carbon dioxide and bicarbonate for photosynthesis.  
+
+[BM: Chris do I need to add more here? Or references?]
 
 \subsection{Process model: Dilution}
 
-$ \frac{Q^M}{V}(DIC^{M} - DIC) $
+To maintain a semi-batch culturing system, manual dilutions that occurred once per day over the period of the experiment were extracted to measure total alkalinity and dissolved inorganic carbon (described in more detail in Section \ref{sec:micro_data_collection}). This also keeps the algae in the growth stage of the biomass curve, resetting it every day so that it never reaches the logit plateau. In the ODE's this affects every state variable, dissolved organic carbon ($DIC$), oxygen ($O_2$), total alkalinity ($TA$) and amount of carbon in the form of cells ($C_p$),
+\begin{align}
+\frac{\partial DIC}{dt} &=&   \frac{Q^M}{V}(DIC^{M} - DIC) 
+\\
+\frac{\partial O_2}{dt}	&=&   \frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2})
+\\
+\frac{\partial TA}{\partial t}  &=&  \frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA)
+\\
+\frac{\partial C_p}{\partial t} &=&  \frac{Q^M}{V}(\phantom{CTA^{M}} - \phantom{IC}C_p)
+\\\nonumber
+\end{align} 
+where $Q ^{M}$ is the measured dilution rate (ml day$^{-1}$) used to force the model, $V$ is the volume of the photo-bioreactor fixed at 500$\mskip3mu$ml, and $DIC ^{M} $, $O_2^{M}$, and $TA^{M}$ are the respective concentrations of the media.
+The media concentrations were calculated using CO2SYS (at temperature = 27 and salinity = 34) and set to be fixed throughout the experiment as $DIC ^{M} $= 1724.20$\mskip3mu$$\mu$M L$^{-1}$, $O_2^{M}$ = 226.65$\mskip3mu$$\mu$M L$^{-1}$, and $TA^{M}$ = 1797.90$\mskip3mu$$\mu$M L$^{-1}$.
 
-$ \frac{Q^M}{V}(\phantom{C}O_{2}^{M} - \phantom{CC}O_{2}) $
-
-$ \frac{Q^M}{V}(\phantom{C}TA^{M} - \phantom{C}TA) $
-
-$ \frac{Q^M}{V}(\phantom{CTA^{M}} - \phantom{IC}C_p) $
 
 
+\subsection{Process model: Ordinary differential equations summary}\label{sec:micro_process_model}
 
-\subsection{Process model: Ordinary differential equations}\label{sec:micro_process_model}
-
-A summary of the ode's that make up the process model:
+A summary of the ODE's that make up the process model described in previous sections:
 \begin{align}
 \text{Rate} & & \text{flux into cells}            &            &\text{gas transfer}   &     & \text{dilution} \nonumber                              \\
 \frac{\partial DIC}{\partial t}&=&                      - (P_1 I \frac{HCO_3^-}{K_m + HCO_3^-} - R_1)&      &+\hat Q^{air}kLa_{ CO_2}^{air}(CO_{2}^{air} - CO_{2})                  & &+\frac{Q^M}{V}(DIC^{M} - DIC)       \nonumber \\
@@ -435,8 +442,8 @@ A summary of the ode's that make up the process model:
     \multirow{4}{*}{\rotatebox[origin=c]{90}{Initial conditions}}
     & $DIC^0$ & Dissolved inorganic carbon & Log$\mathcal{N}$(log(1300), 0.2) & $\mu$M L$^{-1}$ \\
     & $O_2^0$ & Oxygen & Log$\mathcal{N}$(log(225), 0.2) & $\mu$M L$^{-1}$ \\
-    & TA$^0$  & Total alkalinity & Log$\mathcal{N}$(log(1750), 0.1) & $\mu$M L$^{-1}$ \\
-    & $C_p^0$  &  & Log$\mathcal{N}$(log(300), 0.2) & $\mu$M L$^{-1}$ \\
+    & $TA^0$  & Total alkalinity & Log$\mathcal{N}$(log(1750), 0.1) & $\mu$M L$^{-1}$ \\
+    & $C_p^0$  & Carbon in the form of cells & Log$\mathcal{N}$(log(300), 0.2) & $\mu$M L$^{-1}$ \\
 %    & $P^0$  & Rate of photosynthesis & & $\mu$M L$^{-1}$ day$^{-1}$\\
 %    & $R^0$  & Rate of respiration & & $\mu$M L$^{-1}$ day$^{-1}$\\
     & $pH^0$ & -  & Log$\mathcal{N}$(log(8.5), 0.2) & log$_{10}$(-mol/L H+)  \\
@@ -489,7 +496,7 @@ A summary of the ode's that make up the process model:
 %    & $kLa_{ CO_2}^{CO2}$ & mass transfer coefficient & 0.893$kLa_{\phantom{C}O_2}^{CO2}$  & day$^{-1}$ \\
 %    &$  CO_{2} ^{CO2} $ &   &  &  \\   
 %    \hline
-	\caption{State variable, parameter and forcing definitions with units, and their assignments: either fixed values, priors on initial condition or priors on parameters (*) defined later in Section \ref{sec:micro_parameter_model}.}
+	\caption{State variable, parameter and forcing definitions with units, and their assignments: either fixed values, priors on initial condition or priors on parameters (*) defined later in respective sections \ref{sec:micro_parameter_model}.}
 \end{longtable}  
     
 
@@ -540,13 +547,28 @@ A summary of the ode's that make up the process model:
 \subsection{Design and setup of data assimilation model with both simulated and experimental data}
 
 A simulated dataset was created by running the process model described in Section \ref{sec:micro_process_model} with a fixed set of parameters ($P_1$ = 200, $R_1$ = 30, $kLA_{O_2}^{air}$ = 200, $K_m$ = 150, $RQ_d$ = 0.85, $RQ_n$ = 0.95, $R_R$ = 0.075) and initial conditions ($O_2^0$ = 225, $DIC^0$ = 1250, $TA^0$ = 1750). 
-
-The first set of results assimilated the simulated observations and tested how well the system recovered the true parameter values (Section \ref{sec:micro_sim_results1} and \ref{sec:micro_sim_results2}). Then the following results assimilated the experimental data with various formulations of model parameters (Section \ref{sec:micro_exp_results1} and \ref{sec:micro_exp_results2}). [BM: update these to their ref labels]
-
 [Chris: noise on simulated dataset? sigmas?]
 
-\subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
-[BM: I've put these in at the beginning of each results section for now and described how each run is different in the \textbf{In this run:} parts, so that they're clear when we're discussing the results. Will move it here after our meeting.]
+The set of experimental runs with simulated observations are\\
+1. All parameters constant through time.\\
+2. P and R as random walks through time.\\
+3. Km is changing through time. [BM: maybe]\\
+
+
+The first set of results assimilated the simulated observations and tested how well the system recovered the true parameter values (Section \ref{sec:micro_sim_results1} and \ref{sec:micro_sim_results2}). Then the following results assimilated the experimental data with various formulations of model parameters (Section \ref{sec:micro_exp_results1} and \ref{sec:micro_exp_results2}). [BM: update these to their ref labels to reference each section]
+
+The set of experimental runs with experimental data are\\
+1. All parameters constant through time.\\
+2. P and R as random walks through time.\\
+3. P and R as random walks through time, with daily and nightly respiratory quotients as random walks through time. \\
+4. Constraining the respiratory quotients inside biologically justifiable bounds.\\
+5. Adding in an offset.\\
+6. Thinning out the observations further.\\
+
+%\subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
+Each result section will include the treatment of parameters, priors and proposal distributions for clarity.  
+
+[BM: I've put these in at the beginning of each results section for now and described how each run is different in the \textbf{In this run:} parts, so that they're clear when we're discussing the results.]
 
 
 
@@ -1280,6 +1302,15 @@ $TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
 \subsection{Posteriors with experimental data (thinning out the $O_2$ obs further)}
 % micro_iterative_test.bi
 
+Because we can see that the MCMC chain is mixing poorly, we tested whether thinning down the $O_2$ observations even further would improve the results (Figure \ref{fig:thinned_obs_further_micro}).
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.25\textwidth]{images_microalgae/plots/thinned_obs_micro_further}}
+	\caption[.]{Full $O_2$ and $pH$ datasets with further thinned $O_2$ and $pH$ observations.}
+	\label{fig:thinned_obs_further_micro}
+\end{figure}
+
+
 [BM: decide which model to trial these thinned out obs further with]
 
 \begin{figure}
@@ -1338,6 +1369,26 @@ Unbalanced weights of observations- $O_2$ and $pH$ have much denser datasets tha
 Model states are sensitive to small perturbations in parameters. This is why instrument calibration for measurements is essential. [BM: maybe show a python run with different values of temp, constants etc to show the sensitivity? Or maybe just talk about it.] 
 
 Calculate DIC for each model that had the same set of obs to compare which one performs better.
+
+Possibilities for RQngoing well outside what the biology would allow. 
+More processes taking place than what we currently have in the model description. We have a parameter $RQ_n$ that can compensate for the input $O_2$ gas line may have dropped or increased.
+In the model $O_2$ concentration is treated as fixed when in reality this is an unmodelled process. If it's taking air in during the night time in the lab, it might go higher because there are less people there 
+diurnal changes a possibility also, therefore can go up can go down.
+Henry's law shift 
+future work: can measure this too.
+
+when you constrain those two to be between 0.6 and 1, we see things like in the other runs where they slam up against the edge values of the priors and the sampling and mixing goes to shit.
+
+sigma starts going to 0, for estimating the obs error.
+
+bias in instrument errors in completely unmeasured, where the noise on the instrument error is easily measurable, bias on the other hand is not.
+
+Big achievement for this chapter: putting the CO2SYS stuff (if you don't get CO2SYS right then you start getting all sorts of crazy values like negative values etc. CO2SYS is especially sensistive because CO2 is whats controlling the fluxes , must be accurate, HCO3 is in the thousands so the errors need to be tiny because we have huge numbers for HCO3 and tiny numbers for CO2 need to be tiny, need to be really accurate. then pH which is on a log scale means that making a mistake at one part is completely different to making a mistake at another part.) into libbi which opens it up to details and nonlinear processes. getting this to work in the libbi constraints which are using gpus and very simple statistical models- letting us expand this in the mathematical sense for more complex models and equations. this would be the same limitation as stan on the gpu complexitity of model side of things.
+
+Discuss failed experiments and why. Maybe add them to the appendix and reference them here.
+
+Discuss increasing the number of particles and changing the proposal distribution but how this had little effect on the mixing.
+
 
 \appendix
 
