@@ -387,20 +387,15 @@ The carbon flux into cells is measured by net photosynthesis,
 \end{align} 
 where the parameters common to all states are $P_1$, the maximum photosynthesis rate ($\mu$M L$^{-1}$ hour$^{-1}$), $I$ the light indicator (0/1), and the michaelis menton term $\frac{HCO_3^-}{K_m + HCO_3^-}$ representing the photosynthetically active carbon used for photosynthesis. This can be $CO_2$, $HCO_3^-$, or a combination of both, $CO_2 + HCO_3^-$ if the microalgae are using both carbon dioxide and bicarbonate for photosynthesis. $K_m$ is the carbon restriction term ($\mu$M L$^{-1}$).
 
+The respiration rate $R_1$ ($\mu$M L$^{-1}$ hour$^{-1}$), is present in the net photosynthesis calculation for dissolved inorganic carbon ($DIC$), oxygen ($O_2$), and carbon concentration in the form of cells ($C_p$). Oxygen also accounts for the day ($RQ_d$) and night respiratory quotients ($RQ_n$), the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
+Total alkalinity ($TA$) only increases due to photosynthesis while accounting for the Redfield ratio ($R_R$).
+
+%$RQ_d$ and $RQ_n$ are the day and night respiratory quotients, the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
+
+%$C_p$ is the amount of carbon in the PBR in the form of cells, it is the same amount as the photosynthesis term in the DIC state. it is also subject to dilution. The aim of including this is the first step towards quantifying the biomass. later you can build in light etc 
 
 
-and $R_1$ is the respiration rate ($\mu$M L$^{-1}$ hour$^{-1}$).
-
-
-$RQ_d$ and $RQ_n$ are the day and night respiratory quotients, the ratio of $CO_2$ produced and $O_2$ consumed by a cell. 
-
-$R_R$ is the Redfield ratio
-
-
-$C_p$ is the amount of carbon in the PBR in the form of cells, it is the same amount as the photosynthesis term in the DIC state. it is also subject to dilution. The aim of including this is the first step towards quantifying the biomass. later you can build in light etc 
-
-
-[BM: Chris do I need to add more here? Or references?]
+[BM: Chris do I need more explanation here? Or references?]
 
 \subsection{Process model: Dilution}
 
@@ -542,6 +537,14 @@ A summary of the ODE's that make up the process model described in previous sect
 %	
 %\end{tabular}
 %\captionof{table}{Table of Forcings}
+
+
+
+
+
+
+
+
 
 
 \subsection{Design and setup of data assimilation model with both simulated and experimental data}
