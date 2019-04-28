@@ -403,7 +403,7 @@ The media concentrations were calculated using CO2SYS (at temperature = 27 and s
 
 
 
-\subsection{Process model: Ordinary differential equations summary}\label{sec:micro_process_model}
+\subsection{Process model summary and parameter model}\label{sec:micro_process_model}
 
 A summary of the ODE's that make up the process model described in previous sections:
 \begin{align}
@@ -543,8 +543,7 @@ A simulated dataset was created by running the process model described in Sectio
 The set of experimental runs with simulated observations are\\
 1. All parameters constant through time.\\
 2. P and R as random walks through time.\\
-3. Km is changing through time. [BM: maybe]\\
-
+%3. Km is changing through time. [BM: maybe, might not work out]\\
 
 The first set of results assimilated the simulated observations and tested how well the system recovered the true parameter values (Section \ref{sec:micro_sim_results1} and \ref{sec:micro_sim_results2}). Then the following results assimilated the experimental data with various formulations of model parameters (Section \ref{sec:micro_exp_results1} and \ref{sec:micro_exp_results2}). [BM: update these to their ref labels to reference each section]
 
@@ -552,14 +551,12 @@ The set of experimental runs with experimental data are\\
 1. All parameters constant through time.\\
 2. P and R as random walks through time.\\
 3. P and R as random walks through time, with daily and nightly respiratory quotients as random walks through time. \\
-4. Constraining the respiratory quotients inside biologically justifiable bounds.\\
-5. Adding in an offset.\\
-6. Thinning out the observations further.\\
+4. Adding in an offset.\\
+5. Thinning out the observations further.\\
+6. Constraining the respiratory quotients inside biologically justifiable bounds.\\
 
 %\subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
 Each result section will include the treatment of parameters, priors and proposal distributions for clarity.  
-
-[BM: I've put these in at the beginning of each results section for now and described how each run is different in the \textbf{In this run:} parts, so that they're clear when we're discussing the results.]
 
 
 
@@ -628,13 +625,10 @@ Where simulated data was assimilated the true parameter values are indicated by 
 \subsection{Posterior results with simulated data where photosynthesis and respiration are constant through time}\label{sec:micro_sim_results1}
 % micro_iterative_fake_v2.bi
 
-\textbf{In this run:}\\
-$P_1$, $R_1$, $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ are all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors}. The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
-The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}).
-%$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
-%$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
-%$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
-%$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+%\textbf{Parameter model:}\\
+$P_1$, $R_1$, $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors}. The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
+The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_sim_priors}.
+
 \begin{longtable}{| c | c  |  c |}
 	\hline
 	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
@@ -695,28 +689,28 @@ The data model assigned log normally distributed observation errors for each ins
 		\label{table:micro_parameters_sim}
 \end{longtable}
 
-\textbf{Results:}\\
-After 50,000 samples the true values of parameters $R_1$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P_1$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P_1$, $R_1$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
-
-
-Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
-Acceptance rate was XX.
-
+%\textbf{Results:}\\
+After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles, the true values of parameters $R_1$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P_1$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P_1$, $R_1$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
 
 Observed state variables $O_2$, $DIC$, $TA$, and observed $pH$ posteriors were in excellent agreement with observations, with all observations fitting within the 95\% credible interval posteriors (Figure \ref{fig:pos_sim_O2_pH}, Figure \ref{fig:pos_sim_DIC_TA_Cp}).
+
 
 Unobserved state variable $C_p$ .. (Figure \ref{fig:pos_sim_DIC_TA_Cp}).
 
 Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_sim_carbon}).
 
+[BM: Chris what to say about $C_p$ and carbon chem]
+
+Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
+Acceptance rate was XX.
 
 \FloatBarrier
 \subsection{Posterior results with simulated data where photosynthesis and respiration are changing through time}\label{sec:micro_sim_results2}
 % micro_iterative_fake.bi
 
 \textbf{In this run:}\\
-$kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ are all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors2}.
-Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+$kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors2}.
+Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
 \begin{displaymath}
 P_1(t+\Delta t) = P(t) + r_P
 \end{displaymath}
@@ -731,11 +725,7 @@ r_R \sim N(0, \sigma_{r_R})
 \Delta t
 \end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. 
 The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
-The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}).
-%$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
-%$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
-%$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
-%$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_sim_priors2}.
 
 \begin{longtable}{|c | c  |  c|}
 	\hline
@@ -809,18 +799,26 @@ The data model assigned log normally distributed observation errors for each ins
 \end{longtable}
 
 
-
-\textbf{Results:}\\
-After 50,000 samples the true values of parameters $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim_other}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim_other}). 
+After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles, the true values of parameters $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim_other}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim_other}). 
 Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_other_trace}). The true values of $P_1$ (200) and $R_1$ (30) lie within the posterior 95\% credible intervals
 (Figure \ref{fig:pos_sim_P_and_R_other}).
+
+Observed state variables $O_2$, $DIC$, $TA$, and observed $pH$ posteriors were in excellent agreement with observations, with all observations fitting within the 95\% credible interval posteriors (Figure \ref{fig:pos_sim_O2_pH_other}, Figure \ref{fig:pos_sim_DIC_TA_Cp_other}).
+
+
+Unobserved state variable $C_p$ .. (Figure \ref{fig:pos_sim_DIC_TA_Cp_other}).
+
+Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_sim_carbon_other}).
+
+
+Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood_other}).
+Acceptance rate was XX.
 
 \FloatBarrier
 \subsection{Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time}
 % micro_iterative_chris.bi
 
-\textbf{In this run:}\\
-Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
 \begin{displaymath}
 P_1(t+\Delta t) = P(t) + r_P
 \end{displaymath}
@@ -833,14 +831,9 @@ r_P \sim N(0, \sigma_{r_P})
 r_R \sim N(0, \sigma_{r_R})
 \end{math}, and \begin{math}
 \Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
-The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
-$kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$ are all treated as parameters constant through time but unknown. 
-The data model assigned log normally distributed observation errors for each instrument;\\
-%$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
-%$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
-%$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
-%$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
+Parameters $kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_priors_chris}.
+The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_priors_chris}.
 
 \FloatBarrier
 \begin{longtable}{|c | c  |  c|}
@@ -858,7 +851,7 @@ The data model assigned log normally distributed observation errors for each ins
 	$\sigma_{DIC}$ 	& 0.5 	& * \\	
 	\hline
 	\caption[.]{Table of Parameters, their priors and proposal distributions (* indicates the parameter was held fixed).}
-	\label{tab:}
+	\label{tab:micro_priors_chris}
 \end{longtable}
 
 
@@ -924,25 +917,228 @@ The data model assigned log normally distributed observation errors for each ins
 	\label{table:micro_exp_parameters_table}
 \end{longtable}
 
-\textbf{Results:}\\
-40,000 samples run with 1024 particles (40,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was XX.
+The PMMH was run for 40,000 samples with 1024 particles, where 10,000 samples were discarded as burn-in. 40,000 samples was all that could complete in the maximum time allocation on the hpc cluster.
 
 Observed state variables $DIC$ and $TA$ posteriors perform well with all observations lying within the 95\% credible intervals (Figure \ref{fig:micro_exp_DIC_TA_Cp}). $O_2$ posteriors tracked the observations well while the light was on, with all observations falling inside tightly constrained 95\% credible intervals. During times when there was no light, most days the posteriors would fit the observations well to start and then potentially there was a sensor drift causing increasing observations that the model was not accounting for (Figure \ref{fig:micro_exp_O2_pH}). $pH$ captured most observations within the 95\% credible intervals except for 2 points on the 1st day while the light was off (Figure \ref{fig:micro_exp_O2_pH}).
  
+The photosynthesis rate ($P_1$) centred around 240$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with small oscillations during daylight. The 95\% credible intervals lay approximately between 150$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 400$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with tighter intervals at the start of each day (Figure \ref{fig:micro_exp_P_R}).
+The respiration rate ($R_1$) remained centred around 12$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ through the course of the experiment (Figure \ref{fig:micro_exp_P_R}).
 
-$P_1$
-$R_1$
-(Figure \ref{fig:micro_exp_P_R}).
+The day-time respiratory quotient $RQ_d$ centred around 0.75 with a 95\% credible interval of 0.6-1 during the first day of the experiment. The centre dropped to 0.6 during the 2nd, 3rd and 4th days, with 95\% credible intervals of 0.4-0.8 (Figure \ref{fig:micro_exp_RQ_d_RQ_n}). The night-time respiratory quotient $RQ_n$ was initially centred around 0.85 and slowly rose to 1.1 by the end of the experiment. The 95\% credible intervals started with 0.6-1 and increased its span steadily to 0.4-2 by the end of the experiment (Figure \ref{fig:micro_exp_RQ_d_RQ_n}).
 
-The day-time respiratory quotient $RQ_d$ centred around 0.75 during the first day, dropped to 0.6 during the 2nd, 3rd and 4th days. The night-time respiratory quotient $RQ_n$ centred around 0.85 and slowly rose to 1.1 by the end of the experiment. [Values $>$1 are not really realistic but this can be a compensation for not having an offset on the $O_2$ obs]
+parameters
+
+mixing
+
+acceptance rate was XX.
+
+
+[BM: Values $>$1 are not really realistic for respiratory quotients but this can be compensation for not having an offset on the $O_2$ obs, talk about this in the discussion]
 
 
 
 
 
 \FloatBarrier
-\subsection{Posterior results with experimental data where photosynthesis and respiration are changing through time, and respiratory quotients are changing through time with bounds}
+\subsection{[To update] Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time and an offest on $O_2$ is introduced}
+% micro_iterative_chris_offset.bi
+
+
+Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+\begin{displaymath}
+P_1(t+\Delta t) = P(t) + r_P
+\end{displaymath}
+\begin{displaymath}
+R_1(t+\Delta t) = R(t) + r_R
+\end{displaymath}
+where \begin{math}
+r_P \sim N(0, \sigma_{r_P})
+\end{math}, \begin{math}
+r_R \sim N(0, \sigma_{r_R})
+\end{math}, and \begin{math}
+\Delta t
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
+The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
+Parameters $kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$, and $offset_{O_2}$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_priors_chris_offset}.
+The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_priors_chris_offset}.
+
+\FloatBarrier
+\begin{longtable}{|c | c  |  c|}
+	\hline
+	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
+	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
+	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
+	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.005, lower = 0, upper = 0.2) \\
+	%	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.005, lower = 0.6, upper = 1.0)\\
+	%	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.005, lower = 0.6, upper = 1.0)\\
+	$\sigma_{r_P}$ & $\mathcal{N}$(0.02, 0.002)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0002)   \\
+	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
+	$offset_{O_2}$ & $\mathcal{N}$(0, 5.0)     & $\mathcal{N}$($offset_{O_2}$, 0.5)   \\
+	$\sigma_{O_2}$ 	& 0.1 	& * \\
+	$\sigma_{pH}$ 	& 0.1 	& * \\
+	$\sigma_{DIC}$ 	& 0.2 	& * \\
+	\hline
+	\caption[.]{Table of Parameters, their priors and proposal distributions (* indicates the parameter was held fixed).}	
+	\label{tab:micro_priors_chris_offset}
+\end{longtable}
+
+
+
+
+\FloatBarrier
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
+	\label{fig:micro_exp_offset_O2_pH}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
+	\label{fig:micro_exp_offset_DIC_TA_Cp}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
+	\label{fig:micro_exp_offset_carbon}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/P_and_R}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$ and respiration $R_1$.}
+	\label{fig:micro_exp_offset_P_R}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/RQ_d_RQ_n}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_d$ and $RQ_n$.}
+	\label{fig:micro_exp_offset_RQ_d_RQ_n}
+\end{figure}
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris_offset/modelparameters1}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_offset_parameters_model}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris_offset/modelparameters1_trace}}
+	\caption[.]{Traces for model parameters.}
+	\label{fig:micro_exp_offset_parameters_model2}
+\end{figure}
+
+
+
+\begin{longtable}{|c|c|c|} 
+	\hline
+	\bfseries{Parameter}  & \bfseries{Quantiles (25\%, 75\%)}  & \bfseries{Quantiles (5\%, 95\%)} \\ \hline
+	$kLA_{O_2}^{air}$ 	& (152.9413, 167.1751)  & (134.8441, 171.2411)   \\
+	$K_m$ 				& (253.4041, 297.8397) 	& (227.8899, 372.5976) 	 \\ 
+	$R_R$ 				& (0.0532, 0.0744) 		& (0.0346, 0.0833) 		 \\
+	$\sigma_{r_P}$ 		& (0.0170, 0.0177) 		& (0.0168, 0.0188) 		 \\ 
+	$\sigma_{r_R}$ 		& (0.0093, 0.0095) 		& (0.0092, 0.0097)		 \\ 
+	$offset_{O_2}$ 		& (-0.7349, 2.3508) 	& (-1.3238, 5.7816)		 \\ 	
+	\hline
+	\caption[.]{Posterior (25\%, 75\%), (5\%, 95\%) quantiles for parameters after assimilating observations.}	
+	\label{table:micro_exp_offset_parameters_table}
+\end{longtable}
+
+The PMMH was run for 20,000 samples with 2048 particles, where 10,000 samples were discarded as burn-in. 20,000 samples were all that could complete with 2048 particles in the maximum time allocation on the hpc cluster. The number of particles was doubled to test whether this improved mixing.
+
+[UPDATE text below]\\
+Observed state variables $DIC$ and $TA$ posteriors perform well with all observations lying within the 95\% credible intervals (Figure \ref{fig:micro_exp_offset_DIC_TA_Cp}). $O_2$ posteriors tracked the observations excellently while the light was on, with all observations falling inside tightly constrained 95\% credible intervals. During times when there was no light, most days the posteriors would fit the observations well to start and then potentially there was a sensor drift causing increasing observations that the model was not accounting for (Figure \ref{fig:micro_exp_offset_O2_pH}). $pH$ captured most observations within the 95\% credible intervals except for 2 points on the 1st day while the light was off (Figure \ref{fig:micro_exp_offset_O2_pH}).
+
+The photosynthesis rate ($P_1$) centred around 240$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with small oscillations during daylight. The 95\% credible intervals lay approximately between 150$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 400$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with tighter intervals at the start of each day (Figure \ref{fig:micro_exp_offset_P_R}).
+The respiration rate ($R_1$) remained centred around 12$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ through the course of the experiment (Figure \ref{fig:micro_exp_offset_P_R}).
+
+The day-time respiratory quotient $RQ_d$ centred around 0.75 with a 95\% credible interval of 0.6-1 during the first day of the experiment. The centre dropped to 0.6 during the 2nd, 3rd and 4th days, with 95\% credible intervals of 0.4-0.8 (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}). The night-time respiratory quotient $RQ_n$ was initially centred around 0.85 and slowly rose to 1.1 by the end of the experiment. The 95\% credible intervals started with 0.6-1 and increased its span steadily to 0.4-2 by the end of the experiment (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}).
+
+parameters
+offset
+
+mixing, not great. try thinning out the observations further (results in next section).
+
+acceptance rate was 3.7\%.
+
+
+
+
+
+\FloatBarrier
+\subsection{[To update] Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time, $O_2$ has an offset and the $O_2$ observations were thinned further}
+% micro_iterative_chris_offset_thinned.bi
+
+[BM: UPDATE THESE RESULTS WHEN THE RUNS COMPLETE]
+
+Because we can see that the MCMC chain is mixing poorly, we tested whether thinning down the $O_2$ observations even further would improve the results (Figure \ref{fig:thinned_obs_further_micro}).
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.25\textwidth]{images_microalgae/plots/thinned_obs_micro_further}}
+	\caption[.]{Full $O_2$ and $pH$ datasets with further thinned $O_2$ and $pH$ observations.}
+	\label{fig:thinned_obs_further_micro}
+\end{figure}
+
+
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/O2_pH}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
+	\label{fig:micro_exp_test_O2_pH}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/DIC_TA_Cp}}
+	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
+	\label{fig:micro_exp_test_DIC_TA_Cp}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/carbon}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
+	\label{fig:micro_exp_test_carbon}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/P_and_R}}
+	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$.}
+	\label{fig:micro_exp_test_P}
+\end{figure}
+
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters1}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model1}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters2}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model2}
+\end{figure}
+
+\begin{figure}
+	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters3}}
+	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
+	\label{fig:micro_exp_test_parameters_model3}
+\end{figure}
+
+
+\textbf{Results:}\\
+20,000 samples run with 2048 particles (20,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was 14\%.
+
+
+
+
+\FloatBarrier
+\subsection{[To update] Posterior results with experimental data where respiratory quotients are changing through time and bounded to biologically feasible values}
 % micro_iterative.bi
+
+[BM: currently running an updated version of this, if it works out then update the plots and results here. if it doesn't then keep this run but move it to the appendix.]
 
 \textbf{In this run:}\\
 Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
@@ -959,7 +1155,7 @@ r_R \sim N(0, \sigma_{r_R})
 \end{math}, and \begin{math}
 \Delta t
 \end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
-The respiratory quotients ($RQ_d$ and $RQ_n$) are treated as normally distributed noisy states, truncated between 0.6 and 1, where the mean and standard deviation are unknown parameters to be estimated. 
+The respiratory quotients ($RQ_d$ and $RQ_n$) are treated as normally distributed noisy states, truncated between 0.6 and 1, where the mean and standard deviation are unknown parameters to be estimated. \\
 $
 RQ_d \sim truncated\mathcal{N}(\mu_{RQ_d}, \sigma_{RQ_d}, lower = 0.6, upper = 1.0) \\
 RQ_n \sim truncated\mathcal{N}(\mu_{RQ_n}, \sigma_{RQ_n}, lower = 0.6, upper = 1.0) \\ $
@@ -1040,186 +1236,8 @@ $kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$, $\mu_{RQ_d}$, $\sigma_{
 
 \textbf{Results:}\\
 10,000 samples run (no burn-in was discarded) with 1024 particles.
+Updated version: 20,000 (10,000 discarded as burn-in) samples with 2048 particles.
 
-
-
-
-\FloatBarrier
-\subsection{Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time and an offest on $O_2$ is introduced}
-% micro_iterative_chris_offset.bi
-
-
-\textbf{In this run:}\\
-Photosynthesis ($P_1$) and respiration ($R_1$) are both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
-\begin{displaymath}
-P_1(t+\Delta t) = P(t) + r_P
-\end{displaymath}
-\begin{displaymath}
-R_1(t+\Delta t) = R(t) + r_R
-\end{displaymath}
-where \begin{math}
-r_P \sim N(0, \sigma_{r_P})
-\end{math}, \begin{math}
-r_R \sim N(0, \sigma_{r_R})
-\end{math}, and \begin{math}
-\Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred.  
-The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
-$kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$ are all treated as parameters constant through time but unknown. 
-The data model assigned log normally distributed observation errors for each instrument;\\
-%$O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$)\\
-%$pH_{obs}$ $\sim$ Log$\mathcal{N}$(log($pH$),  $\sigma_{pH}$)\\
-%$DIC_{obs}$ $\sim$ Log$\mathcal{N}$(log($DIC$), $\sigma_{DIC}$)\\
-%$TA_{obs}$ $\sim$ Log$\mathcal{N}$(log($TA$), $\sigma_{DIC}$)\\
-
-\FloatBarrier
-\begin{longtable}{|c | c  |  c|}
-	\hline
-	\bfseries{Parameter} & \bfseries{Prior} &  \bfseries{Proposal} \\ \hline
-	$kLA_{O2}$  & Log$\mathcal{N}$(log(200.0), 0.3)  & Log$\mathcal{N}$(log($kLA_{O2}$), 0.03) \\
-	$K_m$ 		&  Log$\mathcal{N}$(log(200.0), 0.6) & Log$\mathcal{N}$(log($K_m$), 0.06) \\
-	$R_R$  		& Uniform(0, 0.2) &  Trun$\mathcal{N}$($R_R$, 0.005, lower = 0, upper = 0.2) \\
-	%	$RQ_d$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_d$, 0.005, lower = 0.6, upper = 1.0)\\
-	%	$RQ_n$  	& Uniform(0.6, 1) &  Trun$\mathcal{N}$($RQ_n$, 0.005, lower = 0.6, upper = 1.0)\\
-	$\sigma_{r_P}$ & $\mathcal{N}$(0.02, 0.002)   & $\mathcal{N}$($\sigma_{r_P}$, 0.0002)   \\
-	$\sigma_{r_R}$ & $\mathcal{N}$(0.01, 0.001)   & $\mathcal{N}$($\sigma_{r_R}$, 0.0001)   \\
-	$offset_{O_2}$ & $\mathcal{N}$(0, 5.0)     & $\mathcal{N}$($offset_{O_2}$, 0.5)   \\
-	$\sigma_{O_2}$ 	& 0.1 	& * \\
-	$\sigma_{pH}$ 	& 0.1 	& * \\
-	$\sigma_{DIC}$ 	& 0.2 	& * \\
-	\hline
-	\caption[.]{Table of Parameters, their priors and proposal distributions (* indicates the parameter was held fixed).}	
-\end{longtable}
-
-
-
-
-\FloatBarrier
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/O2_pH}}
-	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
-	\label{fig:micro_exp_offset_O2_pH}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/DIC_TA_Cp}}
-	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
-	\label{fig:micro_exp_offset_DIC_TA_Cp}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/carbon}}
-	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
-	\label{fig:micro_exp_offset_carbon}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/P_and_R}}
-	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$ and respiration $R_1$.}
-	\label{fig:micro_exp_offset_P_R}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset/RQ_d_RQ_n}}
-	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $RQ_d$ and $RQ_n$.}
-	\label{fig:micro_exp_offset_RQ_d_RQ_n}
-\end{figure}
-
-
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris_offset/modelparameters1}}
-	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:micro_exp_offset_parameters_model}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris_offset/modelparameters1_trace}}
-	\caption[.]{Traces for model parameters.}
-	\label{fig:micro_exp_offset_parameters_model2}
-\end{figure}
-
-
-
-\begin{longtable}{|c|c|c|} 
-	\hline
-	\bfseries{Parameter}  & \bfseries{Quantiles (25\%, 75\%)}  & \bfseries{Quantiles (5\%, 95\%)} \\ \hline
-	$kLA_{O_2}^{air}$ 	& (152.9413, 167.1751)  & (134.8441, 171.2411)   \\
-	$K_m$ 				& (253.4041, 297.8397) 	& (227.8899, 372.5976) 	 \\ 
-	$R_R$ 				& (0.0532, 0.0744) 		& (0.0346, 0.0833) 		 \\
-	$\sigma_{r_P}$ 		& (0.0170, 0.0177) 		& (0.0168, 0.0188) 		 \\ 
-	$\sigma_{r_R}$ 		& (0.0093, 0.0095) 		& (0.0092, 0.0097)		 \\ 
-	$offset_{O_2}$ 		& (-0.7349, 2.3508) 	& (-1.3238, 5.7816)		 \\ 	
-	\hline
-	\caption[.]{Posterior (25\%, 75\%), (5\%, 95\%) quantiles for parameters after assimilating observations.}	
-	\label{table:micro_exp_offset_parameters_table}
-\end{longtable}
-
-\textbf{Results:}\\
-40,000 samples run with 2048 particles (40,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was XX.
-
-
-
-
-
-
-\FloatBarrier
-\subsection{Posteriors with experimental data (thinning out the $O_2$ obs further)}
-% micro_iterative_test.bi
-
-Because we can see that the MCMC chain is mixing poorly, we tested whether thinning down the $O_2$ observations even further would improve the results (Figure \ref{fig:thinned_obs_further_micro}).
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.25\textwidth]{images_microalgae/plots/thinned_obs_micro_further}}
-	\caption[.]{Full $O_2$ and $pH$ datasets with further thinned $O_2$ and $pH$ observations.}
-	\label{fig:thinned_obs_further_micro}
-\end{figure}
-
-
-[BM: decide which model to trial these thinned out obs further with]
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/O2_pH}}
-	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $O_2$ and $pH$ across 4 days.}
-	\label{fig:micro_exp_test_O2_pH}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/DIC_TA_Cp}}
-	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and simulated observations (black) for $DIC$, $TA$ and $C_p$ across 4 days.}
-	\label{fig:micro_exp_test_DIC_TA_Cp}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/carbon}}
-	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for $HCO_3$, $CO_2$ and $CO_3$ across 4 days.}
-	\label{fig:micro_exp_test_carbon}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_test/P_and_R}}
-	\caption[.]{Posterior medians (solid blue line) and 95\% credible intervals (shaded blue) for photosynthesis $P_1$.}
-	\label{fig:micro_exp_test_P}
-\end{figure}
-
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters1}}
-	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:micro_exp_test_parameters_model1}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters2}}
-	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:micro_exp_test_parameters_model2}
-\end{figure}
-
-\begin{figure}
-	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_test/model_parameters3}}
-	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:micro_exp_test_parameters_model3}
-\end{figure}
 
 
 
@@ -1228,14 +1246,12 @@ Because we can see that the MCMC chain is mixing poorly, we tested whether thinn
 
 Non destructive measurements allows us to use sensors to obtain these measurements instead of destructive sampling techniques. Meaning we can get informative estimates from well calibrated sensor measurements that combined with a data assimilating model can 
 
-Unbalanced weights of observations- $O_2$ and $pH$ have much denser datasets than $DIC$ and $TA$. When these densely populated datasets are too frequent, this causes problems in the likelihood estimation 
-[Chris, if you can be bothered Yes,  you might even expand this a bit by showing the a couple of runs with differing density.  This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one]
+
 
 Model states are sensitive to small perturbations in parameters. This is why instrument calibration for measurements is essential. [BM: maybe show a python run with different values of temp, constants etc to show the sensitivity? Or maybe just talk about it.] 
 
-Calculate DIC for each model that had the same set of obs to compare which one performs better.
 
-Possibilities for RQngoing well outside what the biology would allow. 
+Possibilities for RQn going well outside what the biology would allow. 
 More processes taking place than what we currently have in the model description. We have a parameter $RQ_n$ that can compensate for the input $O_2$ gas line may have dropped or increased.
 In the model $O_2$ concentration is treated as fixed when in reality this is an unmodelled process. If it's taking air in during the night time in the lab, it might go higher because there are less people there 
 diurnal changes a possibility also, therefore can go up can go down.
@@ -1250,9 +1266,17 @@ bias in instrument errors in completely unmeasured, where the noise on the instr
 
 Big achievement for this chapter: putting the CO2SYS stuff (if you don't get CO2SYS right then you start getting all sorts of crazy values like negative values etc. CO2SYS is especially sensistive because CO2 is whats controlling the fluxes , must be accurate, HCO3 is in the thousands so the errors need to be tiny because we have huge numbers for HCO3 and tiny numbers for CO2 need to be tiny, need to be really accurate. then pH which is on a log scale means that making a mistake at one part is completely different to making a mistake at another part.) into libbi which opens it up to details and nonlinear processes. getting this to work in the libbi constraints which are using gpus and very simple statistical models- letting us expand this in the mathematical sense for more complex models and equations. this would be the same limitation as stan on the gpu complexitity of model side of things.
 
+
+Discuss increasing the number of particles and changing the proposal distribution but how this had little effect on the mixing. Discuss mixing and correlation overall in reference to each results section.
+
+Unbalanced weights of observations- $O_2$ and $pH$ have much denser datasets than $DIC$ and $TA$. When these densely populated datasets are too frequent, this causes problems in the likelihood estimation 
+[This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one]
+
 Discuss failed experiments and why. Maybe add them to the appendix and reference them here.
 
-Discuss increasing the number of particles and changing the proposal distribution but how this had little effect on the mixing.
+
+% Calculate DIC for each model that had the same set of obs to compare which one performs better.
+
 
 
 \appendix
