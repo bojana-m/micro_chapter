@@ -84,14 +84,18 @@
 
 \section{Introduction}\label{sec:micro_intro} 
 
-Microalgae has long been viewed as a potential platform for bioengineering.  During the 1970's and 2000's much of the research focussed on biofuel production, while recently the potential for pharmaceuticals and other high-value chemicals has been explored.  Whether the desired product is a primary or secondary metabolite it is important to be able to measure and the control the consumption and production.  
+Microalgae has long been viewed as a potential platform for bioengineering.  During the 1970's and 2000's much of the research focussed on biofuel production, while recently the potential for pharmaceuticals and other high-value chemicals has been explored.  Whether the desired product is a primary metabolite (eg lipids in biofuel production) or secondary metabolite (eg astaxanthin as high-value dye) it is important to be able to measure processes such as photosynthesis and respiration that place in the cells.  
+
 
 \begin{itemize}
+\item{} More understanding of processes in high temporal resolution, non-destructive.  
 \item{} 'Fuse' high resolution measurements with more direct measure 
 \item{} Incorporate prior information and constraints 
 \end{itemize}
 
-The key goal of biofuels production is the optimisation of biomass productivity in large-scale microalgal culturing systems such as open ponds or closed photoÄêbioreactors.   Primary goal is maximise the production raw biomass.  
+
+
+
 
 \subsection{Overview} 
 At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction in which \ce{C} is taken from the atmosphere as \ce{CO_2}, along with aqueous nutrients \ce{N} and \ce{P}, to produce biomass
@@ -105,33 +109,35 @@ At the broadest scale / biggest picture the growth of microalgae can be expresse
 
 This equation captures a number of features of interest.  The total biomass is determined by the concentrations of \ce{N} and \ce{P}. A typical growth media for microalgae is Guillard's Marine Enriched Seawater (F/2), which has 
  
-\begin{table}
+\begin{table}[h]
 \begin{tabular}{ |c|r|}
-\textbf{species} & \textbf{conc} \\
+\textbf{species} & \textbf{conc} / $\mu$M \\
 \hline
-N  &  $ 880 \mu M$ \\
-P   & $   36  \mu M$ \\
-TA & $2300 \mu M$
+N  &   880 \\
+P   &   36  \\
+TA & 2300
 \end{tabular}
 \end{table}
 
 \begin{itemize}
 \item{\textbf{Biomass}:} Taking the limiting nutrient to be Nitrogen, the maximum biomass of algae is $200 mg L^{-1}$, of which about $70 mg L^{-1}$ is Carbon.  This is equivalent  $0.12 L$ of pure \ce{CO_2} At Standard Temperature and Pressure, which around to $325 L$ of air for each litre of media.
 
-\item{\textbf{Change in alkalinity}:} Alkalinity is central concept in seawater chemistry that allows one to calculate how much Carbon can be dissolved in solution, and what form it takes (Dissolved Inorganic Carbon exists as \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_3^{2-}}).  Alkalinity measures the charge imbalance between strongly and weakly dissociating ions in solution.  As the charged nutrients are removed from the solution during growth the alkalinity increases and more Carbon is able to be dissolved in the media.
+\item{\textbf{Change in alkalinity}:} Alkalinity is central concept in seawater chemistry that allows one to calculate how much Carbon can be dissolved in solution, and what form it takes (Dissolved Inorganic Carbon exists as \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_3^{2-}}).  Alkalinity measures the charge imbalance between strongly and weakly dissociating ions in solution.  As the charged nutrients are removed from the solution during growth the alkalinity increases and more Carbon is able to be dissolved in the media.  For PBR F/2 media the initial TA is  2300 
 \end{itemize}
+
+\subsection{Growing microalgae in a PBR}
+microalgae grown in open system constanct exh In laboratory photbioreactor small production system ponds.  
+
+
+
+Look at the fluxes into and out the system, like respiromtery.
+
 
 \subsubsection{Carbon in seawater}
  Of
  
- 
-%ce{ CO_2 }
 
 Carbon and light availability are two of the most common limiting factors of biomass productivity \cite{posten2009design}.
-
-
-
-%[BM for ref: At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes. The linear increase in DO caused by these artefacts were used to calculate net photosynthesis. (reference Tamburic 2015)]
 
 
 
@@ -189,15 +195,34 @@ main equations and rate constants
 role of TA
 This consists of 4(?) equations with (4?) uknowns
 
-Ideally CO2SYS \cite{lewis1998program} would have been used to calculate the carbon chemistry of the photo-bioreactor. 
-CO2SYS is a program developed for CO$_2$ system calculations (CO2SYS) that calculates and returns a detailed state of the carbonate system of oceanographic water samples in seawater and freshwater \cite{lewis1998program}.
+When carbon dioxide dissolves in water it undergoes a series of reactions which results in three species that exist in equilibrium, \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_{3}^{-2}}, accompanied  the release of hydrogen ions.  
+This chemical system as been the focus of extensive research as it central role in understanding the effect of anthropogenic carbon emissions and is generally referred to as ``Ocean Acidification''.  
+The dependence of these equilibrium constants on temperature and salinity has been experimentally determined and functional forms have been fitted.  
+This has been integrated into  CO2SYS, a program developed for CO$_2$ system calculations that calculates and returns a detailed state of the carbonate system of oceanographic water samples in seawater and freshwater \cite{lewis1998program}.research.
 A thorough explanation of CO2SYS, and seawater carbon chemistry in general, can be found in  Zeebe and Wolf-gladrow \cite{zeebe2001co2}.  A concise summary of the equations can be found in SOP 3a, Annexe 1 of \cite{dickson2007guide}.
+ 
+\begin{figure}[h]
+	\centerline{\includegraphics[width=0.9\textwidth]{images_microalgae/CO2sys}}
+	\caption[.]{CO2sys}
+	\label{fig:CO2sys}
+\end{figure}
 
-Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure).  In the model the state variables TA and DIC are given and the pH and pCO$_2$ are calculated. 
+It is recognised as the defacto standard for carbon system calculations and is widely used in oceanographic and marine biology. 
+Given two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) the other two parameters can be calculated for a set of input conditions (temperature and pressure).  In the model the state variables TA and DIC are given and the pH and pCO$_2$ are calculated. 
 
 
+Ideally CO2SYS \cite{lewis1998program} would have been used to calculate the carbon chemistry of the photo-bioreactor. 
+However,  it is not possible to directly implement CO2sys in LibBi due the constraints imposed by the GP-GPU computing model.  CO2SYS iteratively solves the set of chemical equilibrium equations which requires a for / while loop and if constructs which are not available in LibBI. 
+A number of approaches were explored to circumvent this restriction:
+\begin{enumerate}
+\item{} Creating functional approximation of the solutions from CO2sys
+\item{} Recasting the steady state equilibrium as a set of coupled ODE's 
+\item{} Manually `unrolling' the while loop as fixed number of iterations.  
+\end{enumerate}
 
-To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
+In addition to being tedious, it was not possible to achieve the accuracy needed via functional approximation.   The set of ODE's the describe the chemical reactions are notoriously stiff \cite{zeebe1999time} which resulted in a prohibitively small step size.  Coding a fixed number of iterations also presented issues as if the number of iterations is too low the solution is inaccurate while too many iterations is inefficient and may be limited by memory available to the process on the GPU. 
+
+CO2SYS was successfully incorporated into LiBbi  by a combination of the first and third approaches.  The functional approximation from step 1 was used to precondition the solution and 3 iterations were explicitly coded.  (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
 considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for $pH_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, $DIC$: 200-2500, and alkalinity: 1500-3000). A range of initial conditions and parameter values were tested, and each converged with RMSE $<$ 0.01 across $pH$, $HCO_3^-$, $CO_2$, and $CO_3$, $DIC$, $O_2$, $TA$ by the 3rd iteration (Figure \ref{fig:iterative_carbon_and_states} and Table \ref{table:rmse_iterative}).
 
@@ -218,8 +243,8 @@ KS     	&=  (1 - 0.001005 S)e^{(KS_{int})} \nonumber
 
 Fluorine:
 \begin{align*}
-TF       	&= \frac{\frac{0.000067 S}{18.9984}}{1.80655} \nonumber \\
-KF       	&= e^{(-(-\frac{874.0}{T_K} - 0.111 \sqrt{S} + 9.68))} \nonumber \\
+TF       		&= \frac{\frac{0.000067 S}{18.9984}}{1.80655} \nonumber \\
+KF       		&= e^{(-(-\frac{874.0}{T_K} - 0.111 \sqrt{S} + 9.68))} \nonumber \\
 SWS_{2_T}  	&= \frac{(1 + \frac{TS}{KS})}{(1 + \frac{TS}{KS} + \frac{TF}{KF})} \nonumber \\
 Free_{2_T} 	&= 1 + \frac{TS}{KS} \nonumber 
 \end{align*}
@@ -538,6 +563,13 @@ A simulated dataset was created by running the process model described in Sectio
 The first set of results assimilated the simulated observations and attempted to recover the true value parameters. 
 
 [Chris: noise on simulated dataset? sigmas?]
+Normally distributed errors with std devs of 
+
+\begin{tabular} {|c|c|}
+$\sigma^2_{DA}$       &        50.  \\
+$\sigma^2_{O_2}$    &           2.   \\
+$\sigma^2_{pH}$     &         0.01  \\
+\end{tabular}
 
 \subsection{Parameter Model: Priors} \label{sec:micro_parameter_model}
 [BM: I've put these in at the beginning of each results section for now and described how each run is different in the \textbf{In this run:} parts, so that they're clear when we're discussing the results. Will move it here after our meeting.]
