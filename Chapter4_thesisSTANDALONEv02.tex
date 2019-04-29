@@ -217,7 +217,9 @@ A number of approaches were explored to circumvent this restriction:
 \item{} Manually `unrolling' the while loop as fixed number of iterations.  
 \end{enumerate}
 
-In addition to being tedious, it was not possible to achieve the accuracy needed via functional approximation.   The set of ODE's the describe the chemical reactions are notoriously stiff \cite{zeebe1999time} which resulted in a prohibitively small step size.  Coding a fixed number of iterations also presented issues as if the number of iterations is too low the solution is inaccurate while too many iterations is inefficient and may be limited by memory available to the process on the GPU. 
+In addition to being tedious, it was not possible to achieve the accuracy needed via functional approximation.  
+In particular, ensuring that the invariants of the system (such as non-negativity and that the sum of the carbon species equals the dissolved inorganic carbon) is not trivial. 
+The set of ODE's the describe the chemical reactions are notoriously stiff \cite{zeebe1999time} which resulted in a prohibitively small step size.  Coding a fixed number of iterations also presented issues as if the number of iterations is too low the solution is inaccurate while too many iterations is inefficient and may be limited by memory available to the process on the GPU. 
 
 CO2SYS was successfully incorporated into LiBbi  by a combination of the first and third approaches.  The functional approximation from step 1 was used to precondition the solution and 3 iterations were explicitly coded.  (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
@@ -432,7 +434,7 @@ To maintain a semi-batch culturing system, manual dilutions that occurred once p
 \\\nonumber
 \end{align} 
 where $Q ^{M}$ is the measured dilution rate (ml day$^{-1}$) used to force the model, $V$ is the volume of the photo-bioreactor fixed at 500$\mskip3mu$ml, and $DIC ^{M} $, $O_2^{M}$, and $TA^{M}$ are the respective concentrations of the media.
-The media concentrations were calculated using CO2SYS (at temperature = 27 and salinity = 34) and set to be fixed throughout the experiment as $DIC ^{M} $= 1724.20$\mskip3mu$$\mu$M L$^{-1}$, $O_2^{M}$ = 226.65$\mskip3mu$$\mu$M L$^{-1}$, and $TA^{M}$ = 1797.90$\mskip3mu$$\mu$M L$^{-1}$.
+The media concentrations were calculated using CO2SYS (at temperature = 27 and salinity = 34) and set to be fixed throughout the experiment as $DIC ^{M} $= 1724.20$\mskip3mu$$\mu$M, $O_2^{M}$ = 226.65$\mskip3mu$$\mu$M and $TA^{M}$ = 1797.90$\mskip3mu$$\mu$M.
 
 
 
