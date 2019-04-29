@@ -101,6 +101,49 @@ Microalgae has long been viewed as a potential platform for bioengineering.  Dur
 \subsection{Overview} 
 At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction in which \ce{C} is taken from the atmosphere as \ce{CO_2}, along with aqueous nutrients \ce{N} and \ce{P}, to produce biomass
 
+\begin{align}\label{eq:chem_simple}
+\ce{
+ 106 CO_2(g)  + 122 H_2O  + 16  NO_3^-(aq)  + PO_4^{3-}(aq)  + 19 H^+}\nonumber\\
+ \ce{
+  \reactrarrow{0pt}{2.5cm}{$\left[10^3-10^4\right]\gamma$}{} C_{106} H_{263} O_{110} N_{16} P_1 + 138 O_2 (g)}
+\end{align}
+
+This equation captures a number of features of interest.  The total biomass is determined by the concentrations of \ce{N} and \ce{P}. A typical growth media for microalgae is Guillard's Marine Enriched Seawater (F/2), which has 
+ 
+\begin{table}[h]
+\begin{tabular}{ |c|r|}
+\textbf{species} & \textbf{conc} / $\mu$M \\
+\hline
+N  &   880 \\
+P   &   36  \\
+TA & 2300
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item{\textbf{Biomass}:} Taking the limiting nutrient to be Nitrogen, the maximum biomass of algae is $200 mg L^{-1}$, of which about $70 mg L^{-1}$ is Carbon.  This is equivalent  $0.12 L$ of pure \ce{CO_2} At Standard Temperature and Pressure, which around to $325 L$ of air for each litre of media.
+
+\item{\textbf{Change in alkalinity}:} Alkalinity is central concept in seawater chemistry that allows one to calculate how much Carbon can be dissolved in solution, and what form it takes (Dissolved Inorganic Carbon exists as \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_3^{2-}}).  Alkalinity measures the charge imbalance between strongly and weakly dissociating ions in solution.  As the charged nutrients are removed from the solution during growth the alkalinity increases and more Carbon is able to be dissolved in the media.  For PBR F/2 media the initial TA is  2300 
+\end{itemize}
+
+\subsection{Growing microalgae in a PBR}
+microalgae grown in open system constanct exh In laboratory photbioreactor small production system ponds.  
+>>>>>>> 3cd771f781f7aab342090c70a19d3d854d801250
+
+
+\begin{itemize}
+\item{} More understanding of processes in high temporal resolution, non-destructive.  
+\item{} 'Fuse' high resolution measurements with more direct measure 
+\item{} Incorporate prior information and constraints 
+\end{itemize}
+
+
+
+
+
+\subsection{Overview} 
+At the broadest scale / biggest picture the growth of microalgae can be expressed as the following chemical reaction in which \ce{C} is taken from the atmosphere as \ce{CO_2}, along with aqueous nutrients \ce{N} and \ce{P}, to produce biomass
+
 \begin{align*}\label{eq:chem_simple}
 \ce{
  106 CO_2(g)  + 122 H_2O  + 16  NO_3^-(aq)  + PO_4^{3-}(aq)  + 19 H^+}\nonumber\\
@@ -162,6 +205,17 @@ ePBRs were maintained at an optical density (OD) of 0.4 using manual dilutions, 
 %Both pH and DO were measured every 5 mins and 1 min respectively; to generate dynamic daily profiles. 
 Dissolved oxygen (DO) was measured using a 3$\mskip3mu$mm robust optical probe (OXROB10-OI; PyroScience GmbH) attached to a FireStingO2 logger (PyroScience GmbH). DO measurements were taken every 60 seconds and temperature-corrected using a temperature extension module (TeX4; PyroScience GmbH). DO was two-point calibrated using air-saturated seawater (100\% saturation) and sodium sulfate-saturated water (0\% saturation). At 2 hour intervals, a solenoid valve (SMC Pneumatics Pty. Ltd.) was used to stop aeration for 10 minutes to allow for observations of net photosynthesis. 
 
+Alkalinity and DIC was measured twice a day closely following the Standard Operating Procedures (SOP) outline in \cite{dickson2007guide}.  Approximately 30$\mskip3mu$mL of \emph{N. oceanica} media was titrated 
+agains 0.1$\mskip3mu$M hydrochloric acid on an auto-titrator (800 Dosino; Metrohm AG) [SOP3b Open-cell tritration]. 
+
+[Chris: DIC measurement collection description]
+The Total Alkalinity and DIC were calculated from the output of the auto-titrator (volume of HCl delivered, pH) by calculating the the pH as a function of the volume of the acid delivered (see SOP3a Annexe 1).  Bayesian inference on TA, DIC, voffset, fK1, fK2, pHoff, pHslope.
+ 
+table here for priors    
+
+link to code.
+
+
 Alkalinity and DIC was measured twice a day closely following the Standard Operating Procedures (SOP) outline in \cite{dickson2007guide}.  Approximately 30$\mskip3mu$mL of \emph{N. oceanica} media was titrated against 0.1$\mskip3mu$M hydrochloric acid on an auto-titrator (800 Dosino; Metrohm AG) [SOP3b Open-cell tritration]. 
 The Total Alkalinity and DIC were calculated from the output of the auto-titrator (volume of HCl delivered, pH) by calculating the the pH as a function of the volume of the acid delivered (see SOP3a Annexe 1).
  
@@ -184,13 +238,16 @@ $O_{2_{obs}}$ $\sim$ Log$\mathcal{N}$(log($O_2$), $\sigma_{O_2}$), $pH_{obs}$ $\
 Due to different instruments used in data collection, $O_2$ observations were collected most frequently (6008 data-points), followed by $pH$ observations (1179 data-points), with $DIC$ and $TA$ collected intermittently (11 data-points). Initial posterior runs with these observation densities resulted in the MCMC chain unable to mix properly due to the high density of observations. In an attempt to improve MCMC mixing, the denser observation sets were thinned/sampled down. The $pH$ observations were thinned to approximately 5\% of the full $pH$ dataset by taking every 30th observation. The $O_2$ observations were thinned to approximately 15\% of the original $O_2$ dataset by only taking those consecutive observations that had at least 1$\mskip3mu$$\mu$M L$^{-1}$ difference (Figure \ref{fig:thinned_obs_micro}).
 
 
+[Chris/SW: should I talk about the thinning out of $O_2$ and pH obs?]
+[Chris, if you can be bothered Yes,  you might even expand this a bit by showing the a couple of runs with differing density.  This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one) 
+
 \FloatBarrier
 \subsection{Process model: Carbon chemistry}
 
 [ Chris : Carbon in seawater summary ]
 main equations and rate constants
 role of TA
-This consists of 4(?) equations with (4?) unknowns
+This consists of 4(?) equations with (4?) uknowns
 
 When carbon dioxide dissolves in water it undergoes a series of reactions which results in three species that exist in equilibrium, \ce{CO_2}, \ce{HCO_3^-} and \ce{CO_{3}^{-2}}, accompanied  the release of hydrogen ions.  
 This chemical system as been the focus of extensive research as it central role in understanding the effect of anthropogenic carbon emissions and is generally referred to as ``Ocean Acidification''.  
@@ -584,6 +641,7 @@ The first set of results assimilated the simulated observations and tested how w
 
 [Chris: noise on simulated dataset? sigmas?]
 Normally distributed errors with std devs of 
+
 
 \begin{tabular} {|c|c|}
 $\sigma^2_{DA}$       &        50.  \\
