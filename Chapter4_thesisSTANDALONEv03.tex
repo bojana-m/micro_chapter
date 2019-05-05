@@ -943,7 +943,9 @@ The data model assigned log normally distributed observation errors for each ins
 The PMMH was run for 40,000 samples with 1024 particles, where 10,000 samples were discarded as burn-in (40,000 samples was the maximum number of samples that could complete in the maximum time allocation on the hpc cluster). The PMMH was tuned to achieve a final acceptance rate of 20.44\%.
 
 Observed state variables $DIC$ and $TA$ posteriors performed well with all observations lying within the 95\% credible intervals (Figure \ref{fig:micro_exp_DIC_TA_Cp}). $O_2$ posteriors tracked the observations well while the light was on, with all observations falling inside tightly constrained 95\% credible intervals. During times when there was no light, most days the posteriors would fit the observations well to start and then potentially there was a sensor drift causing increasing observations that the model was not accounting for (Figure \ref{fig:micro_exp_O2_pH}). $pH$ captured most observations within the 95\% credible intervals except for 2 points on the 1st day while the light was off (Figure \ref{fig:micro_exp_O2_pH}).
- 
+Unobserved state variable $C_p$ posterior increased during each day, flattened during the nights and dropped suddenly with every dilution event (Figure \ref{fig:micro_exp_DIC_TA_Cp}).
+Carbon chemistry (Figure \ref{fig:micro_exp_carbon}).
+
 The photosynthesis rate ($P_1$) centred around 240$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with small oscillations during daylight. The 95\% credible intervals lay approximately between 150$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 400$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with tighter intervals at the start of each day (Figure \ref{fig:micro_exp_P_R}).
 The respiration rate ($R_1$) remained centred around 12$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ through the course of the experiment (Figure \ref{fig:micro_exp_P_R}).
 
@@ -951,8 +953,7 @@ The day-time respiratory quotient $RQ_d$ centred around 0.75 with a 95\% credibl
 
 Parameter $kLA_{O_2}^{air}$ saw a more constrained posterior distribution with 25\% and 75\% quantiles (139.5979, 170.8102) (Table \ref{table:micro_exp_parameters_table}, Figure \ref{fig:micro_exp_parameters_model}) compared to the assigned prior (Table \ref{tab:micro_priors_chris}). $K_m$ had little change between prior and posterior distribution (Figure \ref{fig:micro_exp_parameters_model}).
 While the $R_R$ posterior distribution spanned the whole prior range (0, 0.2), there was higher density concentrated around the 25\% and 75\% quantiles (0.0815, 0.1512) (Figure \ref{fig:micro_exp_parameters_model}, Table \ref{table:micro_exp_parameters_table}). Parameters $\sigma_{r_P}$ and $\sigma_{r_R}$ showed no large shifts from prior to posterior.
-
-Parameter trace-plots showed $kLA_{O_2}^{air}$, $K_m$, $\sigma_{rP}$, $\sigma_{rR}$ and $R_R$ did not mix well, some autocorrelation between samples was present (Figure \ref{fig:micro_exp_parameters_model2}). 
+Parameter trace-plots showed $kLA_{O_2}^{air}$, $K_m$, $\sigma_{rP}$, $\sigma_{rR}$ and $R_R$ that mixing needed to be improved, some autocorrelation between samples was present (Figure \ref{fig:micro_exp_parameters_model2}). 
 
 
 
@@ -971,7 +972,7 @@ Parameter trace-plots showed $kLA_{O_2}^{air}$, $K_m$, $\sigma_{rP}$, $\sigma_{r
 
 Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks as described in Section \ref{sec:micro_sim_results2}, and similarly respiratory quotients $RQ_d$ and $RQ_n$ were also modelled as random walks (Section \ref{sec:micro_exp_random_walks_all}). An offset parameter ($offset_{O_2}$) was added to the $O_2$ ODE to see if any of the instrument mis-calibration could be quantified.
 Parameters $kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$, and $offset_{O_2}$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_priors_chris_offset}.
-The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_priors_chris_offset}.
+The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with tighter observation error standard deviation values cited in Table \ref{tab:micro_priors_chris_offset}.
 
 \FloatBarrier
 \begin{longtable}{|c | c  |  c|}
@@ -1060,6 +1061,8 @@ The data model assigned log normally distributed observation errors for each ins
 The PMMH was run for 20,000 samples with 2048 particles, where 10,000 samples were discarded as burn-in. 20,000 samples were all that could complete with 2048 particles in the maximum time allocation on the hpc cluster. The number of particles was doubled to test whether this improved mixing, changes to proposal parameters were also trialled.
 
 Observed state variables $DIC$ and $TA$ posteriors perform well with all observations lying within the 95\% credible intervals (Figure \ref{fig:micro_exp_offset_DIC_TA_Cp}). $O_2$ posteriors tracked the observations excellently while the light was on, with all observations falling inside tightly constrained 95\% credible intervals. During times when there was no light, each day the posteriors would fit the observations well to start and then potentially there was a sensor drift causing increasing observations that the model was not accounting for (Figure \ref{fig:micro_exp_offset_O2_pH}). $pH$ captured most observations within the 95\% credible intervals (Figure \ref{fig:micro_exp_offset_O2_pH}).
+Unobserved state variable $C_p$ posterior increased during each day, flattened during the nights and dropped suddenly with every dilution event (Figure \ref{fig:micro_exp_offset_DIC_TA_Cp}).
+Carbon chemistry (Figure \ref{fig:micro_exp_offset_carbon}).
 
 The photosynthesis rate ($P_1$) was centred between 200 and 250$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ oscillating subtly with daylight peaks. The 95\% credible intervals lay approximately between 150$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 400$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with tighter intervals at the start of each day (Figure \ref{fig:micro_exp_offset_P_R}).
 The respiration rate ($R_1$) remained centred around 9$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 20$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ through the course of the experiment (Figure \ref{fig:micro_exp_offset_P_R}).
@@ -1067,8 +1070,7 @@ The respiration rate ($R_1$) remained centred around 9$\mskip3mu$$\mu$M L$^{-1}$
 The day-time respiratory quotient $RQ_d$ was centred around 0.7 with a 95\% credible interval of 0.6-0.9 during the first day of the experiment. The centre dropped to 0.5 during the 2nd, 3rd, and 4th days with tighter 95\% credible intervals of 0.4-0.6 (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}). The night-time respiratory quotient $RQ_n$ was initially centred around 0.9 and slowly rose to 1.1 by the second day and continued around 1.1 for the remainder of the experiment. The 95\% credible intervals started with 0.6-1 and increased its span steadily to 0.5-2 by the end of the experiment (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}).
 
 
-Cp
-carbon
+
 parameters
 first time introduced an offset
 
