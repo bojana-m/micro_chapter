@@ -669,7 +669,7 @@ Where simulated data was assimilated the true parameter values are indicated by 
 % micro_iterative_fake_v2.bi
 
 %\textbf{Parameter model:}\\
-$P$, $R$, $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors}. The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
+Parameters $P$, $R$, $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors}. The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
 The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_sim_priors}.
 
 \begin{longtable}{| c | c  |  c |}
@@ -733,27 +733,21 @@ The data model assigned log normally distributed observation errors for each ins
 \end{longtable}
 
 %\textbf{Results:}\\
-After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles, the true values of parameters $R$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}). $P$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P$, $R$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
+After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles and tuning to an acceptance rate of 28.79\%, the true values of parameters $R$, $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim}, Figure \ref{fig:pos_sim_model_parameters}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim}, Figure \ref{fig:pos_sim_model_parameters}). $P$ was the only parameter whose true value lied on the cusp of the 5th percentile. Parameters $P$, $R$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_traces}).
 
 Observed state variables $O_2$, $DIC$, $TA$, and observed $pH$ posteriors were in excellent agreement with observations, with all observations fitting within the 95\% credible interval posteriors (Figure \ref{fig:pos_sim_O2_pH}, Figure \ref{fig:pos_sim_DIC_TA_Cp}).
+Unobserved state variable posterior $C_p$ appeared to be constrained throughout the experiment (Figure \ref{fig:pos_sim_DIC_TA_Cp}). Similarly, the carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ also had tightly constrained posteriors (Figure \ref{fig:pos_sim_carbon}).
 
 
-Unobserved state variable $C_p$ .. (Figure \ref{fig:pos_sim_DIC_TA_Cp}).
+% Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
 
-Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_sim_carbon}).
-
-[BM: Chris what to say about $C_p$ and carbon chem]
-
-Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood}).
-Acceptance rate was 28.79\%.
 
 \FloatBarrier
 \subsection{Posterior results with simulated data where photosynthesis and respiration are changing through time}\label{sec:micro_sim_results2}
 % micro_iterative_fake.bi
 
-\textbf{In this run:}\\
-$kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as parameters constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors2}.
-Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
+Parameters $kLA_{O_2}$, $K_m$, $R_R$, $RQ_d$, and $RQ_n$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_sim_priors2}.
+Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we took \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
 \begin{displaymath}
 P_1(t+\Delta t) = P(t) + r_P
 \end{displaymath}
@@ -766,7 +760,7 @@ r_P \sim N(0, \sigma_{r_P})
 r_R \sim N(0, \sigma_{r_R})
 \end{math}, and \begin{math}
 \Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. 
+\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} were treated as parameters to be inferred. 
 The other model parameters were defined earlier in Table \ref{tab:micro_parameter_model}.
 The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_sim_priors2}.
 
@@ -842,39 +836,25 @@ The data model assigned log normally distributed observation errors for each ins
 \end{longtable}
 
 
-After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles, the true values of parameters $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim_other}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim_other}). 
-Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_other_trace}). The true values of $P_1$ (200) and $R_1$ (30) lie within the posterior 95\% credible intervals
+After running the PMMH for 50,000 samples (10,000 discarded as burn-in) with 1024 particles and tuning to get an acceptance rate of 20.23\%, the true values of parameters $kLA_{O_2}^{air}$, $R_R$, and $RQ_d$ were recovered to the 25th and 75th percentile (Table \ref{table:micro_parameters_sim_other}). While the true values of $K_m$ and $RQ_n$ did not lie within the 25th and 75th quantile, they were captured by the 5th and 95th percentiles (Table \ref{table:micro_parameters_sim_other}). 
+Parameters $\sigma_{rP}$, $\sigma_{rR}$, $kLA_{O_2}^{air}$, and $R_R$ mixed well, while parameters $K_m$, $RQ_d$, and $RQ_n$ did not mix as well, some autocorrelation between samples was present (Figure \ref{fig:micro_sim_model_parameters_other_trace}). The true values of $P_1$ (200) and $R_1$ (30) lay within the posterior 95\% credible intervals
 (Figure \ref{fig:pos_sim_P_and_R_other}).
-
 Observed state variables $O_2$, $DIC$, $TA$, and observed $pH$ posteriors were in excellent agreement with observations, with all observations fitting within the 95\% credible interval posteriors (Figure \ref{fig:pos_sim_O2_pH_other}, Figure \ref{fig:pos_sim_DIC_TA_Cp_other}).
 
-
-Unobserved state variable $C_p$ .. (Figure \ref{fig:pos_sim_DIC_TA_Cp_other}).
-
-Carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ ... (Figure \ref{fig:pos_sim_carbon_other}).
+Unobserved state variable posterior $C_p$ appeared to be constrained throughout the experiment (Figure \ref{fig:pos_sim_DIC_TA_Cp_other}).
+Similarly, the carbon chemistry variables $HCO_3$, $CO_2$, and $CO_3$ also had tightly constrained posteriors (Figure \ref{fig:pos_sim_carbon_other}).
 
 
-Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood_other}).
-Acceptance rate was 20.23\%.
+
+% Log-likelihood stopped rising (Figure \ref{fig:micro_sim_loglikelihood_other}).
+
 
 \FloatBarrier
 \subsection{Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time}
 % micro_iterative_chris.bi
 
-Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks, by taking \begin{math}P\end{math} and \begin{math}R\end{math}, previously constant parameters, and replacing them by \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math}. Here, we take \begin{math}P_1(t)\end{math} and \begin{math}R_1(t)\end{math} to be such that
-\begin{displaymath}
-P_1(t+\Delta t) = P(t) + r_P
-\end{displaymath}
-\begin{displaymath}
-R_1(t+\Delta t) = R(t) + r_R
-\end{displaymath}
-where \begin{math}
-r_P \sim N(0, \sigma_{r_P})
-\end{math}, \begin{math}
-r_R \sim N(0, \sigma_{r_R})
-\end{math}, and \begin{math}
-\Delta t
-\end{math} is the length of discrete time-step. For the purpose of the Bayesian analysis here, \begin{math}\sigma_{r_P}\end{math} and \begin{math}\sigma_{r_R}\end{math} are treated as parameters to be inferred. The respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks with $rP$ and $rR$ as wiener processes. 
+Photosynthesis ($P_1$) and respiration ($R_1$) were both modelled as random walks as described in Section \ref{sec:micro_sim_results2}. 
+Similarly, the respiratory quotients $RQ_d$ and $RQ_n$ were also treated as random walks, changing through time, with Wiener processes as standard deviations.
 Parameters $kLA_{O_2}$, $K_m$, $R_R$, $\sigma_{rP}$, $\sigma_{rR}$ were all treated as constant through time but unknown with prior distributions and proposal distributions defined in Table \ref{tab:micro_priors_chris}.
 The data model assigned log normally distributed observation errors for each instrument (Section \ref{sec:micro_data_model}) with observation error standard deviation values cited in Table \ref{tab:micro_priors_chris}.
 
@@ -1156,7 +1136,7 @@ This section aimed to test whether thinning out the $O_2$ observations further (
 \begin{figure}
 	\centerline{\includegraphics[width=1.3\textwidth]{images_microalgae/plots_chris_offset_thinned/modelparameters1}}
 	\caption[.]{Priors (pink) and posteriors (purple) for model parameters.}
-	\label{fig:micro_offset_thinned_parameters_model1}
+	\label{fig:micro_offset_thinned_parameters_model}
 \end{figure}
 
 \begin{figure}
@@ -1184,26 +1164,32 @@ Similarly to Section \ref{sec:micro_exp_offset}, 20,000 samples were run (10,000
 
 There was an improvement in $pH$ posterior with the 95\% credible interval now capturing all observations (Figure \ref{fig:micro_offset_thinned_O2_pH}).
 Visually there does not appear to be much difference in $O_2$ posterior with both runs capturing the same observations within their 95\% credible intervals. The credible intervals are wider during the day for the further thinned observations when compared to Figure \ref{fig:micro_exp_offset_O2_pH}.
+There was not much difference between posteriors for $DIC$, $TA$, and $C_p$ (Figure \ref{fig:micro_offset_thinned_DIC_TA_Cp}) apart from the $C_p$ 95\% credible interval being wider when there are less $O_2$ observations.
+Similarly, the carbon chemistry behaved similarly in both sections (Figure \ref{fig:micro_offset_thinned_carbon}).
 
-There is not much difference between posteriors for $DIC$, $TA$, and $C_p$ (Figure \ref{fig:micro_offset_thinned_DIC_TA_Cp}) apart from the $C_p$ 95\% credible interval being wider when there are less $O_2$ observations.
-
-carbon chemistry looks similar (Figure \ref{fig:micro_offset_thinned_carbon})
-
-$P_1$ behaved similarly, with more smoothness through the median and slightly wider credible intervals when less $O-@$ observations were assimilated. $R_1$ notably was centred around 15$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals 5-30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_offset_thinned_P_and_R}) compared to 9$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 20$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_exp_offset_P_R}). 
-
+$P_1$ behaved similarly across sections, with more smoothness through the median and slightly wider credible intervals when less $O_2$ observations were assimilated. $R_1$ notably was centred around 15$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals 5-30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_offset_thinned_P_and_R}) compared to 9$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 20$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_exp_offset_P_R}). 
 Respiratory quotients had smoother medians throughout the experiment with less $O_2$ data (Figure \ref{fig:micro_offset_thinned_RQ_d_RQ_n}) otherwise not much change. 
 
-parameters (Figure \ref{fig:micro_offset_thinned_parameters_model})
 
-Parameter traces improved their mixing (Figure \ref{fig:micro_offset_thinned_parameters_model_trace}) from Section \ref{sec:micro_exp_offset}, but still displayed some correlation between samples which is not ideal.
+$kLA_{O_2}^{air}$ posterior shifted to higher values compared to Section \ref{sec:micro_exp_offset}. $offset_{O_2}$ had a wider posterior than that of the previous section but still centred around approximately the same value.
+$K_m$ posterior shifted to lower values while $R_R$ displayed a wider posterior distribution than the previous section while being centred lower.
+Posteriors for $\sigma_{rP}$ and $\sigma_{rR}$ were both wider when there were less $O_2$ observations to be assimilated (Figure \ref{fig:micro_offset_thinned_parameters_model}).
+Parameter traces improved their mixing (Figure \ref{fig:micro_offset_thinned_parameters_model_trace}) from Section \ref{sec:micro_exp_offset}, but still displayed correlation between samples.
 
 
 
 \FloatBarrier
 \section{Discussion}
 
+Learnings by result section:
 
-After thinning out the $O_2$ observations further, mixing improved in Section \ref{sec:micro_exp_offset_thinned} but still was not ideal. Correlated samples were present [EJ: how do I address this issue?].
+
+
+After thinning out the $O_2$ observations further, the acceptance rate and mixing improved in Section \ref{sec:micro_exp_offset_thinned} but still was not ideal. Correlated samples were present.
+Apart from smoothing  out some of the state variable posteriors, and subtly wider 95\% credible intervals, there was not much difference in posterior results between Section \ref{sec:micro_exp_offset} and Section \ref{sec:micro_exp_offset_thinned} where the $O_2$ observations were thinned further
+
+
+
 
 
 Non destructive measurements allow us to use sensors to obtain these measurements instead of destructive sampling techniques. Meaning we can get informative estimates from well calibrated sensor measurements that combined with a data assimilating model can 
