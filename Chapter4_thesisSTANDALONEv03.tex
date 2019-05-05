@@ -1112,11 +1112,6 @@ Overall, mixing of the PMMH was poor with an acceptance rate of 3.57\% and slowl
 \subsection{Posterior results with experimental data where photosynthesis, respiration and respiratory quotients are changing through time, $O_2$ has an offset and the $O_2$ observations were thinned further}\label{sec:micro_exp_offset_thinned}
 % micro_iterative_chris_offset_thinned.bi
 
-[BM: UPDATE THESE RESULTS WHEN THE RUNS COMPLETE]
-
-Because we can see that the MCMC chain is mixing poorly, we tested whether thinning down the $O_2$ observations even further would improve the results (Figure \ref{fig:thinned_obs_further_micro}). 
-
-Everything remained the same as Section \ref{sec:micro_exp_offset}, only the $O_2$ observation density was thinned out further.
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.25\textwidth]{images_microalgae/plots/thinned_obs_micro_further}}
@@ -1124,7 +1119,7 @@ Everything remained the same as Section \ref{sec:micro_exp_offset}, only the $O_
 	\label{fig:thinned_obs_further_micro}
 \end{figure}
 
-
+This section aimed to test whether thinning out the $O_2$ observations further (Figure \ref{fig:thinned_obs_further_micro}) helped improve the poorly mixed chain of Section \ref{sec:micro_exp_offset}. All priors and model specifications remained the same as Section \ref{sec:micro_exp_offset}, with the only difference being the further reduced $O_2$ dataset to 5\% of the full observation set.
 
 
 \begin{figure}
@@ -1132,6 +1127,7 @@ Everything remained the same as Section \ref{sec:micro_exp_offset}, only the $O_
 	\caption[.]{Posterior medians (solid blue line), 95\% credible intervals (shaded blue), and observations (black) for $O_2$ and $pH$ across 4 days.}
 	\label{fig:micro_offset_thinned_O2_pH}
 \end{figure}
+
 
 \begin{figure}
 	\centerline{\includegraphics[width=1.2\textwidth]{images_microalgae/plots_chris_offset_thinned/DIC_TA_Cp}}
@@ -1184,15 +1180,31 @@ Everything remained the same as Section \ref{sec:micro_exp_offset}, only the $O_
 	\label{table:micro_exp_offset_thinned_parameters_table}
 \end{longtable}
 
-20,000 samples run with 2048 particles (20,000 was all that could complete in the maximum time allocation on the hpc cluster). 10,000 discarded as burn-in, acceptance rate was 13.61\%.
+Similarly to Section \ref{sec:micro_exp_offset}, 20,000 samples were run (10,000 discarded as burn-in) with 2048 particles. The acceptance rate improved to 13.61\% with less dense observations. 
 
+There was an improvement in $pH$ posterior with the 95\% credible interval now capturing all observations (Figure \ref{fig:micro_offset_thinned_O2_pH}).
+Visually there does not appear to be much difference in $O_2$ posterior with both runs capturing the same observations within their 95\% credible intervals. The credible intervals are wider during the day for the further thinned observations when compared to Figure \ref{fig:micro_exp_offset_O2_pH}.
 
-[UPDATE text below]\\
+There is not much difference between posteriors for $DIC$, $TA$, and $C_p$ (Figure \ref{fig:micro_offset_thinned_DIC_TA_Cp}) apart from the $C_p$ 95\% credible interval being wider when there are less $O_2$ observations.
+
+carbon chemistry looks similar (Figure \ref{fig:micro_offset_thinned_carbon})
+
+$P_1$ behaved similarly, with more smoothness through the median and slightly wider credible intervals when less $O-@$ observations were assimilated. $R_1$ notably was centred around 15$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals 5-30$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_offset_thinned_P_and_R}) compared to 9$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ with 95\% credible intervals between 4$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ and 20$\mskip3mu$$\mu$M L$^{-1}$ hour$^{-1}$ (Figure \ref{fig:micro_exp_offset_P_R}). 
+
+Respiratory quotients had smoother medians throughout the experiment with less $O_2$ data (Figure \ref{fig:micro_offset_thinned_RQ_d_RQ_n}) otherwise not much change. 
+
+parameters (Figure \ref{fig:micro_offset_thinned_parameters_model})
+
+Parameter traces improved their mixing (Figure \ref{fig:micro_offset_thinned_parameters_model_trace}) from Section \ref{sec:micro_exp_offset}, but still displayed some correlation between samples which is not ideal.
 
 
 
 \FloatBarrier
 \section{Discussion}
+
+
+After thinning out the $O_2$ observations further, mixing improved in Section \ref{sec:micro_exp_offset_thinned} but still was not ideal. Correlated samples were present [EJ: how do I address this issue?].
+
 
 Non destructive measurements allow us to use sensors to obtain these measurements instead of destructive sampling techniques. Meaning we can get informative estimates from well calibrated sensor measurements that combined with a data assimilating model can 
 
