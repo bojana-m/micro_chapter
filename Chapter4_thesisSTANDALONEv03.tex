@@ -219,7 +219,7 @@ In addition to being tedious, it was not possible to achieve the accuracy needed
 In particular, ensuring that the invariants of the system (such as non-negativity and that the sum of the carbon species equals the dissolved inorganic carbon) is not trivial.  
 The set of ODE's the describe the chemical reactions are notoriously stiff \cite{zeebe1999time} which resulted in a prohibitively small step size.  Coding a fixed number of iterations also presented issues as if the number of iterations is too low the solution is inaccurate while too many iterations is inefficient and may be limited by memory available to the process on the GPU.  
 
-CO2SYS was successfully incorporated into LiBbi  by a combination of the first and third approaches.  The functional approximation from step 1 was used to precondition the solution and 3 iterations were explicitly coded.  (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
+CO2SYS was successfully incorporated into LibBi  by a combination of the first and third approaches.  The functional approximation from step 1 was used to precondition the solution and 3 iterations were explicitly coded.  (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 $ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $
 considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial starting value $x_0$. The approximate root $x_{n+1}$ converges to the exact solution very quickly if a close initial starting value is picked. To ensure the quick convergence of the Newton-Raphson method, an approximating equation for $pH_0$ (Eq. \ref{pH_approx_eq}) was obtained by fitting a stepwise regression with interactions to a range of simulated CO2SYS input parameters (temperature: 20-30, salinity: 30-40, $DIC$: 200-2500, and alkalinity: 1500-3000). A range of initial conditions and parameter values were tested, and each converged with RMSE $<$ 0.01 across $pH$, $HCO_3^-$, $CO_2$, and $CO_3$, $DIC$, $O_2$, $TA$ by the 3rd iteration (Figure \ref{fig:iterative_carbon_and_states} and Table \ref{table:rmse_iterative}).
 
@@ -232,7 +232,7 @@ considering a function $f(x_n)$, its derivative $f'(x_n)$ and an initial startin
 
 %Using two of the four measurable carbonate system parameters (total alkalinity, total inorganic CO$_2$, pH, and either fugacity fCO$_2$ or partial pressure of CO$_2$) to calculate the other two parameters at a set of input conditions (temperature and pressure).  In the model the state variables TA and DIC are given and the pH and pCO$_2$ are calculated. 
 
-%To incorporate CO2SYS into LiBbi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
+%To incorporate CO2SYS into LibBi for solving carbon chemistry on the timescale of the microalgae model, we explicitly defined 3 iterations (Eq. \ref{newton_raph_iterations1} - \ref{newton_raph_iterations_end}) of the Newton-Raphson method for finding approximations to roots of real valued functions. The Newton-Raphson method is an iterative process 
 
 %HCO$_3^-$, CO$_2$, and CO$_3$ were calculated from the 3rd iteration of pH.
 
@@ -1075,8 +1075,6 @@ The respiration rate ($R_1$) remained centred around 9$\mskip3mu$$\mu$M L$^{-1}$
 The day-time respiratory quotient $RQ_d$ was centred around 0.7 with a 95\% credible interval of 0.6-0.9 during the first day of the experiment. The centre dropped to 0.5 during the 2nd, 3rd, and 4th days with tighter 95\% credible intervals of 0.4-0.6 (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}). The night-time respiratory quotient $RQ_n$ was initially centred around 0.9 and slowly rose to 1.1 by the second day and continued around 1.1 for the remainder of the experiment. The 95\% credible intervals started with 0.6-1 and increased its span steadily to 0.5-2 by the end of the experiment (Figure \ref{fig:micro_exp_offset_RQ_d_RQ_n}).
 
 Each parameter posterior showed learnings from the prior distributions with much tighter distributions in comparison (Figure \ref{fig:micro_exp_offset_parameters_model}). 
-
-
 Parameter $kLA_{O_2}^{air}$ had a very tightly constrained posterior distribution with 25\% and 75\% quantiles (147.0307, 161.6729) (Table \ref{table:micro_exp_offset_parameters_table}, Figure \ref{fig:micro_exp_offset_parameters_model}).
 $K_m$ tightened its posterior distribution with 25\% and 75\% quantiles (264.5106, 373.5021) (Figure \ref{fig:micro_exp_offset_parameters_model}).
 The $R_R$ posterior distribution had high density concentrations around the 25\% and 75\% quantiles (0.1538, 0.1701) (Figure \ref{fig:micro_exp_offset_parameters_model}, Table \ref{table:micro_exp_offset_parameters_table}).
@@ -1179,50 +1177,30 @@ Parameter traces improved their mixing (Figure \ref{fig:micro_offset_thinned_par
 \FloatBarrier
 \section{Discussion}
 
-Learnings by result section:
+Non destructive measurements allowed us to use sensors to obtain high density measurements instead of destructive sampling techniques. Consequently we obtained informative estimates from well calibrated sensor measurements that combined with a data assimilating model informed on the main processes of interest without the expense of destructive sampling and limited data-points.
+
+While the $pH$ measurements were calibrated and corrected, it was more difficult to assess the bias from $O_2$ instrument errors as it was completely unmeasured. Where the noise on instrument errors is easily measurable, the bias is not. This was the motivation for introducing an offset on the $O_2$ measurements in Section \ref{sec:micro_exp_offset} and included when testing a further thinned data-set in Section \ref{sec:micro_exp_offset_thinned}. During early assimilation runs, it was visible that model states were sensitive to small perturbations in parameters, which makes addressing instrument bias even more essential.
+
+% [BM: Offset results: when introduced the offset, also tightened the obs errors, talk about how this affected the tighter parameter posteriors. the offset posterior distribution spanned over 0, meaning that maybe there was no need for it? More constrained parameter posterior distributions here, either because an offset was introduced or a combination of introducing an offset and reducing the observation error standard deviations.]
+
+% [BM: offset thinned results: After thinning out the $O_2$ observations further, the acceptance rate and mixing improved in Section \ref{sec:micro_exp_offset_thinned} but still was not ideal. Correlated samples were present. Apart from smoothing  out some of the state variable posteriors, and subtly wider 95\% credible intervals, there was not much difference in posterior results between Section \ref{sec:micro_exp_offset} and Section \ref{sec:micro_exp_offset_thinned} where the $O_2$ observations were thinned further ]
+
+% [BM: sigma starts going to 0, for estimating the obs error.]
+
+During the model formulation, the respiratory quotients $RQ_d$ and $RQ_n$ were assigned random bounded walks between biologically feasible values 0.6 and 1 to restrict their wandering into biologically unexplainable spaces. These runs did not result in successfully running posteriors as $RQ_n$ was slamming into the top bound and $RQ_d$ was pushing against the bottom bound with next to no proposed jumps being accepted. It was decided to allow them to randomly walk unbounded to see which spaces they would enter and if it improved model performance. This resulted in $RQ_n$ spanning into values larger than 1, while $RQ_d$ centred around 0.6 for 3 out of the 4 experiment days and had credible intervals spanning down to 0.4. One possibility for the respiratory quotient posteriors going into values outside those that biology would allow (larger than 1 or less than 0.6) was that, in reality, there were more processes taking place than those in the model description. The respiratory quotient could have been compensating for these un-modelled processes, for example the parameter $RQ_n$ can compensate for a drop or increase in the input $O_2$ gas line. In the model, $O_2$ concentration is treated as fixed when in reality this is a further un-modelled process that could have diurnal changes, Henry's law shifts, or physical lab components such as increases because there are less people there during the night than during the day allowing it higher values. For future work, as much of these components can and should be measured to adjust the observational data-sets rather than increasing the complexity of the process model and not having informative measurements to constrain those extra processes.
+
+% RQ's: when you constrain those two to be between 0.6 and 1, we see things like in the other runs where they slam up against the edge values of the priors and the sampling and mixing goes to shit.
+
+There were many attempts made to improve the mixing of the MCMC chains in each results section, such as tuning the proposal distribution step size, increasing the number of particles, and further thinning out very dense data-sets ($O_2$). The final runs presented here are the best possible achieved within computational resources available. There was still autocorrelation present between samples which could have been addressed by running the MCMC chain for longer, say 100,000 to 150,000 to deal with the autocorrelated samples. This was not presently possible because of the computationally expensive nature of the PMMH, with every increase in particles or samples requiring an increase in computational resources.
+
+% Discuss increasing the number of particles and changing the proposal distribution but how this had little effect on the mixing. Discuss mixing and correlation overall in reference to each results section.
+
+% Unbalanced weights of observations- $O_2$ and $pH$ have much denser datasets than $DIC$ and $TA$. When these densely populated datasets are too frequent, this causes problems in the likelihood estimation. [This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one]
+
+One of the major achievements of this chapter was being able to successfully and accurately resolve CO2SYS in LibBi. This had two major impacts, the first was depicting the carbon state of the system accurately as CO2SYS was sensitive to producing unfeasible carbon values like negative $HCO_3$ for example, due to a small discrepancies when attempting to find a viable approximation. The sensitivity was present on different carbon scales and must be accurate as we had large values for $HCO_3$ (in thousands) and tiny values for $CO_2$ (less than 10), while $pH$ is on a log scale meaning that errors in approximation for one are more consequential than the other. The flow on effects are present in the fluxes because the carbon state of the system is what drives them. The second major impact is that successfully implementing an accurate representation of CO2SYS within LibBi constraints which are designed for parallel processing, and simplicity limitations because of their use of gpus, opens up LibBi to more complex models and equations. These limitations are the same across other Bayesian inference software like Stan and the approach used in this chapter can be applied there also.
 
 
-
-when introduced the offset, also tightened the obs errors, talk about how this affected the tighter parameter posteriors. the offset posterior distribution spanned over 0, meaning that maybe there was no need for it?
-
-
-After thinning out the $O_2$ observations further, the acceptance rate and mixing improved in Section \ref{sec:micro_exp_offset_thinned} but still was not ideal. Correlated samples were present.
-Apart from smoothing  out some of the state variable posteriors, and subtly wider 95\% credible intervals, there was not much difference in posterior results between Section \ref{sec:micro_exp_offset} and Section \ref{sec:micro_exp_offset_thinned} where the $O_2$ observations were thinned further
-
-
-
-
-
-Non destructive measurements allow us to use sensors to obtain these measurements instead of destructive sampling techniques. Meaning we can get informative estimates from well calibrated sensor measurements that combined with a data assimilating model can 
-
-
-
-Model states are sensitive to small perturbations in parameters. This is why instrument calibration for measurements is essential. [BM: maybe show a python run with different values of temp, constants etc to show the sensitivity? Or maybe just talk about it.] 
-
-
-Possibilities for RQn going well outside what the biology would allow. 
-More processes taking place than what we currently have in the model description. We have a parameter $RQ_n$ that can compensate for the input $O_2$ gas line may have dropped or increased.
-In the model $O_2$ concentration is treated as fixed when in reality this is an unmodelled process. If it's taking air in during the night time in the lab, it might go higher because there are less people there 
-diurnal changes a possibility also, therefore can go up can go down.
-Henry's law shift 
-future work: can measure this too.
-
-when you constrain those two to be between 0.6 and 1, we see things like in the other runs where they slam up against the edge values of the priors and the sampling and mixing goes to shit.
-
-sigma starts going to 0, for estimating the obs error.
-
-bias in instrument errors in completely unmeasured, where the noise on the instrument error is easily measurable, bias on the other hand is not.
-
-Big achievement for this chapter: putting the CO2SYS stuff (if you don't get CO2SYS right then you start getting all sorts of crazy values like negative values etc. CO2SYS is especially sensistive because CO2 is whats controlling the fluxes , must be accurate, HCO3 is in the thousands so the errors need to be tiny because we have huge numbers for HCO3 and tiny numbers for CO2 need to be tiny, need to be really accurate. then pH which is on a log scale means that making a mistake at one part is completely different to making a mistake at another part.) into libbi which opens it up to details and nonlinear processes. getting this to work in the libbi constraints which are using gpus and very simple statistical models- letting us expand this in the mathematical sense for more complex models and equations. this would be the same limitation as stan on the gpu complexitity of model side of things.
-
-
-Discuss increasing the number of particles and changing the proposal distribution but how this had little effect on the mixing. Discuss mixing and correlation overall in reference to each results section.
-
-Unbalanced weights of observations- $O_2$ and $pH$ have much denser datasets than $DIC$ and $TA$. When these densely populated datasets are too frequent, this causes problems in the likelihood estimation 
-[This issue of how to combine  fuse different measurements with huge differences in sampling density is an interesting one]
-
-Discuss failed experiments and why. Maybe add them to the appendix and reference them here.
-
+% Discuss failed experiments and why. Maybe add them to the appendix and reference them here.
 
 % Calculate DIC for each model that had the same set of obs to compare which one performs better.
 
@@ -1230,9 +1208,9 @@ Discuss failed experiments and why. Maybe add them to the appendix and reference
 
 \appendix
 
-\chapter{LiBbi model code}\label{appendix_micro_libbi_code}
+\chapter{LibBi model code}\label{appendix_micro_libbi_code}
 
-\textbf{LiBbi model file: micro\_iterative.bi}
+\textbf{LibBi model file: micro\_iterative.bi}
 \begin{lstlisting}
 model micro_iterative {
 
@@ -1477,7 +1455,7 @@ alk_obs ~ log_normal(log(alk), sigma_DIC)
 }
 \end{lstlisting}
 
-\textbf{LiBbi prior sampling file: prior.conf}
+\textbf{LibBi prior sampling file: prior.conf}
 \begin{lstlisting}
 --target prior
 --model-file micro_iterative.bi
@@ -1489,7 +1467,7 @@ alk_obs ~ log_normal(log(alk), sigma_DIC)
 --output-file results/prior_micro_iterative.nc
 \end{lstlisting}
 
-\textbf{LiBbi posterior sampling file: posterior.conf}
+\textbf{LibBi posterior sampling file: posterior.conf}
 \begin{lstlisting}
 --target posterior
 --model-file micro_iterative.bi
@@ -1506,7 +1484,7 @@ alk_obs ~ log_normal(log(alk), sigma_DIC)
 
 \begin{sidewaysfigure}
 	\centerline{\includegraphics[width=0.9\textwidth]{images_microalgae/micro_template.pdf}}
-	\caption[.]{Directed Acyclic Graph of the LiBbi model file micro\_iterative.bi}
+	\caption[.]{Directed Acyclic Graph of the LibBi model file micro\_iterative.bi}
 	\label{fig:micro_DAG}
 \end{sidewaysfigure}
 
